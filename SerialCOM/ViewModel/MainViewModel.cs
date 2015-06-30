@@ -4,17 +4,15 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Documents;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 
-namespace SerialCOM.ViewModel
+namespace Kogler.SerialCOM
 {
     public class MainViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
         public MainViewModel()
         {
             ////if (IsInDesignMode)
@@ -42,6 +40,9 @@ namespace SerialCOM.ViewModel
             ReadCommand.RaiseCanExecuteChanged();
         }
 
+        public FlowDocument Document { get; } = new FlowDocument();
+        private StringBuilder Log { get; set; }
+
         private SerialPort Port { get; set; }
         public string[] Ports { get; }
 
@@ -53,33 +54,24 @@ namespace SerialCOM.ViewModel
             {
                 m_SelectedPort = value;
                 OpenCommand.RaiseCanExecuteChanged();
-                // ReSharper disable once ExplicitCallerInfoArgument
-                RaisePropertyChanged(nameof(CanSelectPort));
             }
         }
         
         public bool CanSelectPort => SelectedPort != null && (Port == null || !Port.IsOpen);
-
-        public FlowDocument Document { get; } = new FlowDocument();
-
+        
         public RelayCommand OpenCommand { get; }
         public RelayCommand ReadCommand { get; }
         public RelayCommand CloseCommand { get; }
 
         private void OpenPort()
         {
-            try
-            {
-                if (Port == null) Port = new SerialPort(SelectedPort, 9600, Parity.None, 8, StopBits.One);
-                Port.Open();
-                Write($"{SelectedPort} port is open.");
-                ReadCommand.RaiseCanExecuteChanged();
-            }
-            catch (Exception)
-            {
-                
-                throw;
-            }
+            if (Port != null) throw new InvalidOperationException($"{Port.PortName} port is already in use.");
+            Port = new SerialPort(SelectedPort, 9600, Parity.None, 8, StopBits.One);
+            Log = new StringBuilder();
+            Port.Open();
+            Write($"{SelectedPort} port is open.");
+            ReadCommand.RaiseCanExecuteChanged();
+            RaisePropertyChanged(nameof(CanSelectPort));
         }
 
         private async Task ReadDataAsync()
@@ -102,35 +94,64 @@ namespace SerialCOM.ViewModel
 
         private Task ClosePort()
         {
-            Task close = new Task(() =>
+            Task close = new Task(async () =>
             {
                 try
                 {
                     Port.Close();
+                    await RunInUI(() => Write($"{Port.PortName} port is closed."));
                     OpenCommand.RaiseCanExecuteChanged();
                     ReadCommand.RaiseCanExecuteChanged();
                     CloseCommand.RaiseCanExecuteChanged();
+                    RaisePropertyChanged(nameof(CanSelectPort));
                 }
                 catch (IOException)
                 {
-                    Write("Error closing port: SerialPort was not open.");
+                    await RunInUI(() => Write("Error closing port: SerialPort was not open."));
                     throw;
+                }
+                finally
+                {
+                    var path = $"{AppDomain.CurrentDomain.BaseDirectory}{SelectedPort}_{DateTime.Now.ToString("dd.MM.yyyy_HH.mm.ss")}.txt";
+                    File.AppendAllText(path, Log.ToString());
+                    Port.Dispose();
+                    Port = null;
+                    Log = null;
+                    RunInUI(() =>
+                    {
+                        Document.Blocks.Clear();
+                        Write($"Last log was saved to {path}");
+                    });
+                    RaisePropertyChanged(nameof(CanSelectPort));
                 }
             });
             close.Start();
             return close;
         }
 
+        private static async Task RunInUI(Action action)
+        {
+            await Application.Current.Dispatcher.BeginInvoke(action);
+        }
+
         private void Write(string text)
         {
             if (string.IsNullOrEmpty(text)) return;
-            var p = new Paragraph();
+            var p = new Paragraph {TextAlignment = TextAlignment.Left};
             var time = new Run(DateTime.Now.ToLongTimeString() + ": ");
             var t = new Run(text);
             p.Inlines.Add(time);
             p.Inlines.Add(t);
             Document.Blocks.Add(p);
+            p.Loaded += ParagrafToView;
+            Log?.AppendLine(text);
         }
 
+        private static void ParagrafToView(object sender, RoutedEventArgs e)
+        {
+            var p = (Paragraph) sender;
+            p.Loaded -= ParagrafToView;
+            p.BringIntoView();
+        }
     }
 }
