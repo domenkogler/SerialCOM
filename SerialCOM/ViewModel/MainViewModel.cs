@@ -24,62 +24,92 @@ namespace Kogler.SerialCOM
             ////    // Code runs "for real"
             ////}
 
-            
-            OpenCommand = new RelayCommand(OpenPort, CanOpenPort);
-            ReadCommand = new RelayCommandAsync(ReadDataAsync, IsPortOpen);
-            CloseCommand = new RelayCommandAsync(ClosePortAsync, IsPortOpen);
+            RefreshPortsCommand = new RelayCommand(RefreshPorts);
+            OpenPortCommand = new RelayCommand(OpenPort, ()=> CanOpenPort);
+            ClosePortCommand = new RelayCommand(async ()=> await ClosePortAsync(), ()=> IsPortOpen);
 
+            RefreshPorts();
+        }
+
+        private void RefreshPorts()
+        {
             Ports = SerialPort.GetPortNames();
-            SelectedPort = Ports.FirstOrDefault();
-            if (SelectedPort == null) Write("No COM ports availible.");
+            if (!Ports.Any())
+            {
+                Write("No COM ports availible.");
+                SelectedPort = null;
+            }
+            if (SelectedPort == null) SelectedPort = Ports.FirstOrDefault();
+            OpenPortCommand.RaiseCanExecuteChanged();
+            RefreshPortsCommand.RaiseCanExecuteChanged();
+            ClosePortCommand.RaiseCanExecuteChanged();
         }
 
         public async override void Cleanup()
         {
             base.Cleanup();
             if (Port.IsOpen) await ClosePortAsync();
-            ReadCommand.RaiseCanExecuteChanged();
         }
 
         public FlowDocument Document { get; } = new FlowDocument();
         private StringBuilder Log { get; set; }
 
         private SerialPort Port { get; set; }
-        public string[] Ports { get; }
+
+        private string[] _ports;
+        public string[] Ports
+        {
+            get { return _ports; }
+            private set { Set(ref _ports, value); }
+        }
 
         private string _selectedPort;
         public string SelectedPort
         {
             get { return _selectedPort; }
-            set
-            {
-                _selectedPort = value;
-                OpenCommand.RaiseCanExecuteChanged();
-            }
+            set { Set(ref _selectedPort, value); }
         }
         
         public bool CanSelectPort => SelectedPort != null && (Port == null || !Port.IsOpen);
-        
-        public RelayCommand OpenCommand { get; }
-        public RelayCommand ReadCommand { get; }
-        public RelayCommand CloseCommand { get; }
 
-        private Func<bool> CanOpenPort => () => SelectedPort != null && !IsPortOpen();
-        private Func<bool> IsPortOpen => () => Port != null && Port.IsOpen;
+        // ReSharper disable once ExplicitCallerInfoArgument
+        private void CanSelectPortRaiseCanExecuteChanged() => RaisePropertyChanged(nameof(CanSelectPort));
+
+        public RelayCommand OpenPortCommand { get; }
+        public RelayCommand RefreshPortsCommand { get; }
+        public RelayCommand ClosePortCommand { get; }
+
+        private bool CanOpenPort => SelectedPort != null && !IsPortOpen;
+        private bool IsPortOpen => Port != null && Port.IsOpen;
 
         private void OpenPort()
         {
-            if (Port != null) throw new InvalidOperationException($"{Port.PortName} port is already in use.");
+            RefreshPorts();
+            if (SelectedPort == null) return;
+            if (Port != null)
+            {
+                var pName = Port.PortName;
+                Write($"{pName} port is already in use. Closing this port... If this is taking long time try to disconect the port.");
+                Task.WaitAll(ClosePortAsync());
+                Write($"Port {pName} is closed.");
+            }
             Port = new SerialPort(SelectedPort, 9600, Parity.None, 8, StopBits.One);
             Log = new StringBuilder();
-            Port.Open();
+            try
+            {
+                Port.Open();
+            }
+            catch (Exception e)
+            {
+                Write(e.Message);
+            }
+            if (!IsPortOpen) return;
             Write($"{SelectedPort} port is open.");
-            ReadCommand.RaiseCanExecuteChanged();
-            // ReSharper disable once ExplicitCallerInfoArgument
-            RaisePropertyChanged(nameof(CanSelectPort));
+            CanSelectPortRaiseCanExecuteChanged();
+            ReadDataAsync();
         }
 
-        private async Task ReadDataAsync()
+        private async void ReadDataAsync()
         {
             byte[] buffer = new byte[4096];
             Task<int> readStringTask = Port.BaseStream.ReadAsync(buffer, 0, 100);
@@ -90,11 +120,20 @@ namespace Kogler.SerialCOM
             {
                bytesRead = await readStringTask;
             }
-            catch(IOException)
+            catch(IOException e)
             {
+                Write(e.Message);
+                return;
             }
             string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-            Write(data);
+            Write($"Data: {data}");
+#pragma warning disable 4014
+            readStringTask.ContinueWith(task =>
+            {
+                if (!IsPortOpen) return;
+                ReadDataAsync();
+            });
+#pragma warning restore 4014
         }
 
         private Task ClosePortAsync()
@@ -105,10 +144,9 @@ namespace Kogler.SerialCOM
                 {
                     Port.Close();
                     await RunInUI(() => Write($"{Port.PortName} port is closed."));
-                    OpenCommand.RaiseCanExecuteChanged();
-                    ReadCommand.RaiseCanExecuteChanged();
-                    CloseCommand.RaiseCanExecuteChanged();
-                    RaisePropertyChanged(nameof(CanSelectPort));
+                    OpenPortCommand.RaiseCanExecuteChanged();
+                    ClosePortCommand.RaiseCanExecuteChanged();
+                    CanSelectPortRaiseCanExecuteChanged();
                 }
                 catch (IOException)
                 {
@@ -129,7 +167,7 @@ namespace Kogler.SerialCOM
                         Write($"Last log was saved to {path}");
                     });
 #pragma warning restore 4014
-                    RaisePropertyChanged(nameof(CanSelectPort));
+                    CanSelectPortRaiseCanExecuteChanged();
                 }
             });
             close.Start();

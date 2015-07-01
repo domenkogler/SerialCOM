@@ -12,10 +12,10 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
+            <Button Content="Refresh ports" Command="{Binding RefreshPortsCommand}" Padding="5" Margin="5" />
             <ComboBox ItemsSource="{Binding Ports}" SelectedValue="{Binding SelectedPort, Mode=TwoWay}" IsEnabled="{Binding CanSelectPort}" Padding="5" Margin="5" MinWidth="50"/>
-            <Button Content="Open" Command="{Binding OpenCommand}" Padding="5" Margin="5"/>
-            <Button Content="Read" Command="{Binding ReadCommand}" Padding="5" Margin="5"/>
-            <Button Content="Close" Command="{Binding CloseCommand}" Padding="5" Margin="5"/>
+            <Button Content="Open" Command="{Binding OpenPortCommand}" Padding="5" Margin="5" />
+            <Button Content="Close" Command="{Binding ClosePortCommand}" Padding="5" Margin="5" />
         </StackPanel>
         <FlowDocumentScrollViewer Document="{Binding Document}" Grid.Row="1" Grid.Column="0" BorderBrush="DarkGray" BorderThickness="1" />
     </Grid>
