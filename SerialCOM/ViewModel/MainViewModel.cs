@@ -25,18 +25,19 @@ namespace Kogler.SerialCOM
             ////}
 
             
-            OpenCommand = new RelayCommand(OpenPort, () => SelectedPort != null && (Port == null || !Port.IsOpen));
-            ReadCommand = new RelayCommand(async ()=> await ReadDataAsync(), ()=> Port != null && Port.IsOpen);
-            CloseCommand = new RelayCommand(async () => await ClosePort(), ()=> Port != null && Port.IsOpen);
+            OpenCommand = new RelayCommand(OpenPort, CanOpenPort);
+            ReadCommand = new RelayCommandAsync(ReadDataAsync, IsPortOpen);
+            CloseCommand = new RelayCommandAsync(ClosePortAsync, IsPortOpen);
 
             Ports = SerialPort.GetPortNames();
             SelectedPort = Ports.FirstOrDefault();
+            if (SelectedPort == null) Write("No COM ports availible.");
         }
 
         public async override void Cleanup()
         {
             base.Cleanup();
-            if (Port.IsOpen) await ClosePort();
+            if (Port.IsOpen) await ClosePortAsync();
             ReadCommand.RaiseCanExecuteChanged();
         }
 
@@ -46,13 +47,13 @@ namespace Kogler.SerialCOM
         private SerialPort Port { get; set; }
         public string[] Ports { get; }
 
-        private string m_SelectedPort;
+        private string _selectedPort;
         public string SelectedPort
         {
-            get { return m_SelectedPort; }
+            get { return _selectedPort; }
             set
             {
-                m_SelectedPort = value;
+                _selectedPort = value;
                 OpenCommand.RaiseCanExecuteChanged();
             }
         }
@@ -63,6 +64,9 @@ namespace Kogler.SerialCOM
         public RelayCommand ReadCommand { get; }
         public RelayCommand CloseCommand { get; }
 
+        private Func<bool> CanOpenPort => () => SelectedPort != null && !IsPortOpen();
+        private Func<bool> IsPortOpen => () => Port != null && Port.IsOpen;
+
         private void OpenPort()
         {
             if (Port != null) throw new InvalidOperationException($"{Port.PortName} port is already in use.");
@@ -71,6 +75,7 @@ namespace Kogler.SerialCOM
             Port.Open();
             Write($"{SelectedPort} port is open.");
             ReadCommand.RaiseCanExecuteChanged();
+            // ReSharper disable once ExplicitCallerInfoArgument
             RaisePropertyChanged(nameof(CanSelectPort));
         }
 
@@ -92,7 +97,7 @@ namespace Kogler.SerialCOM
             Write(data);
         }
 
-        private Task ClosePort()
+        private Task ClosePortAsync()
         {
             Task close = new Task(async () =>
             {
@@ -117,11 +122,13 @@ namespace Kogler.SerialCOM
                     Port.Dispose();
                     Port = null;
                     Log = null;
+#pragma warning disable 4014
                     RunInUI(() =>
                     {
                         Document.Blocks.Clear();
                         Write($"Last log was saved to {path}");
                     });
+#pragma warning restore 4014
                     RaisePropertyChanged(nameof(CanSelectPort));
                 }
             });
