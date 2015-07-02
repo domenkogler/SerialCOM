@@ -123,10 +123,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ExampleData\bis.txt" />
-    <Resource Include="ExampleData\COM1_02.07.2015_10.11.41.txt" />
-    <Resource Include="ExampleData\COM1_02.07.2015_12.08.53.txt" />
-    <Resource Include="ExampleData\COM1_02.07.2015_12.11.29.txt" />
+    <Resource Include="SampleData\bis.txt" />
+    <Resource Include="SampleData\COM1_02.07.2015_10.11.41.txt" />
+    <Resource Include="SampleData\COM1_02.07.2015_12.08.53.txt" />
+    <Resource Include="SampleData\COM1_02.07.2015_12.11.29.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
