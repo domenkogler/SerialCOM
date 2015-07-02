@@ -17,6 +17,6 @@
             <Button Content="Open" Command="{Binding OpenPortCommand}" Padding="5" Margin="5" />
             <Button Content="Close" Command="{Binding ClosePortCommand}" Padding="5" Margin="5" />
         </StackPanel>
-        <FlowDocumentScrollViewer Document="{Binding Document}" Grid.Row="1" Grid.Column="0" BorderBrush="DarkGray" BorderThickness="1" />
+        <FlowDocumentScrollViewer Document="{Binding Document, Mode=OneTime}" Grid.Row="1" Grid.Column="0" BorderBrush="DarkGray" BorderThickness="1" />
     </Grid>
 </Window>
