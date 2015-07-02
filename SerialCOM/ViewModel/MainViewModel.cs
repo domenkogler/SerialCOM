@@ -109,30 +109,40 @@ namespace Kogler.SerialCOM
             ReadDataAsync();
         }
 
+        byte[] buffer = new byte[10240];
+        int bytesRead = 0;
         private async void ReadDataAsync()
         {
-            byte[] buffer = new byte[4096];
-            Task<int> readStringTask = Port.BaseStream.ReadAsync(buffer, 0, 100);
+            Task<int> readStringTask = Port.BaseStream.ReadAsync(buffer, bytesRead , 1024);
 
-            if (!readStringTask.IsCompleted) Write("Waiting data...");
-            int bytesRead = 0;
+            //if (!readStringTask.IsCompleted) Write("Waiting data...");
+            int read = 0;
             try
-            {
-               bytesRead = await readStringTask;
+            { 
+               read = await readStringTask;
+               if (read> 2) bytesRead += read;
             }
             catch(IOException e)
             {
                 Write(e.Message);
                 return;
             }
-            string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-            Write($"Data: {data}");
-#pragma warning disable 4014
-            readStringTask.ContinueWith(task =>
+            if (read < 2)
             {
-                if (!IsPortOpen) return;
+                string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                Write(data);
+                
+                buffer = new byte[10240];
+                bytesRead = 0;
+            }
+            //write($"Data: {data}");
+            
+#pragma warning disable 4014
+            //readStringTask.ContinueWith(task =>
+            //{
+            //    if (!IsPortOpen) return;
                 ReadDataAsync();
-            });
+            //});
 #pragma warning restore 4014
         }
 
@@ -143,14 +153,14 @@ namespace Kogler.SerialCOM
                 try
                 {
                     Port.Close();
-                    await RunInUI(() => Write($"{Port.PortName} port is closed."));
+                    await Write($"{Port.PortName} port is closed.");
                     OpenPortCommand.RaiseCanExecuteChanged();
                     ClosePortCommand.RaiseCanExecuteChanged();
                     CanSelectPortRaiseCanExecuteChanged();
                 }
                 catch (IOException)
                 {
-                    await RunInUI(() => Write("Error closing port: SerialPort was not open."));
+                    await Write("Error closing port: SerialPort was not open.");
                     throw;
                 }
                 finally
@@ -179,17 +189,20 @@ namespace Kogler.SerialCOM
             await Application.Current.Dispatcher.BeginInvoke(action);
         }
 
-        private void Write(string text)
+        private async Task Write(string text)
         {
             if (string.IsNullOrEmpty(text)) return;
-            var p = new Paragraph {TextAlignment = TextAlignment.Left};
-            var time = new Run(DateTime.Now.ToLongTimeString() + ": ");
-            var t = new Run(text);
-            p.Inlines.Add(time);
-            p.Inlines.Add(t);
-            Document.Blocks.Add(p);
-            p.Loaded += ParagrafToView;
-            Log?.AppendLine(text);
+            await RunInUI(() =>
+            {
+                var p = new Paragraph { TextAlignment = TextAlignment.Left };
+                var time = new Run(DateTime.Now.ToLongTimeString() + ": ");
+                var t = new Run(text);
+                //p.Inlines.Add(time);
+                p.Inlines.Add(t);
+                Document.Blocks.Add(p);
+                p.Loaded += ParagrafToView;
+                Log?.AppendLine(text);
+            });
         }
 
         private static void ParagrafToView(object sender, RoutedEventArgs e)
