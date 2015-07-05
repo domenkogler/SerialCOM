@@ -198,7 +198,7 @@ namespace Kogler.SerialCOM
                     Write(e.Message);
                     return;
                 }
-                if (read != 1) continue;
+                if (read <= 2) continue;
                 string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                 var inline = !Model.AddData(data);
                 Write(data, inline);
