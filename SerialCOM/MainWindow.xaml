@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:serialCom="clr-namespace:Kogler.SerialCOM"
         mc:Ignorable="d"
         Title="SerialCOM" Height="600" Width="800" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     
@@ -17,6 +18,17 @@
             <Button Content="Open" Command="{Binding OpenPortCommand}" Padding="5" Margin="5" />
             <Button Content="Close" Command="{Binding ClosePortCommand}" Padding="5" Margin="5" />
         </StackPanel>
-        <FlowDocumentScrollViewer Document="{Binding Document, Mode=OneTime}" Grid.Row="1" Grid.Column="0" BorderBrush="DarkGray" BorderThickness="1" />
+        <TabControl Grid.Row="1">
+            <TabItem Header="Log">
+                <FlowDocumentScrollViewer Document="{Binding Document, Mode=OneTime}" Grid.Row="1" Grid.Column="0" BorderBrush="DarkGray" BorderThickness="1" />
+            </TabItem>
+            <TabItem Header="Data">
+                <ListView ItemsSource="{Binding Model.Rows}">
+                    <ListView.View>
+                        <GridView serialCom:GridViewColumns.ColumnsSource="{Binding Model.Columns}" />
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
