@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Ports;
@@ -8,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using GalaSoft.MvvmLight;
@@ -36,6 +34,8 @@ namespace Kogler.SerialCOM
             ClosePortCommand = new RelayCommand(async ()=> await ClosePortAsync(), ()=> IsPortOpen);
 
             RefreshPorts();
+
+            //Model.AddSampleData();
         }
 
         public async override void Cleanup()
@@ -51,7 +51,7 @@ namespace Kogler.SerialCOM
         public FlowDocument Document { get; } = new FlowDocument();
         private StringBuilder Log { get; set; }
         private SerialPort Port { get; set; }
-        public BisModel Model { get; private set; }
+        public SerialModel Model { get; } = new BisModel();
 
         private string[] _ports;
         public string[] Ports
@@ -158,7 +158,6 @@ namespace Kogler.SerialCOM
         {
             Port = new SerialPort(SelectedPort, 9600, Parity.None, 8, StopBits.One);
             Log = new StringBuilder();
-            Model = new BisModel();
         }
 
         private void CleanupProperties()
@@ -166,7 +165,7 @@ namespace Kogler.SerialCOM
             Port.Dispose();
             Port = null;
             Log = null;
-            Model = null;
+            Model.Reset();
         }
 
         private void SaveFiles()
@@ -250,41 +249,5 @@ namespace Kogler.SerialCOM
         }
 
         #endregion
-    }
-
-    public static class GridViewColumns
-    {
-        [AttachedPropertyBrowsableForType(typeof (GridView))]
-        public static IEnumerable<GridViewColumn> GetColumnsSource(DependencyObject obj)
-        {
-            return (IEnumerable<GridViewColumn>) obj.GetValue(ColumnsSourceProperty);
-        }
-
-        public static void SetColumnsSource(DependencyObject obj, IEnumerable<GridViewColumn> value)
-        {
-            obj.SetValue(ColumnsSourceProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for ColumnsSource.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ColumnsSourceProperty =
-            DependencyProperty.RegisterAttached(
-                "ColumnsSource",
-                typeof(IEnumerable<GridViewColumn>),
-                typeof(GridViewColumns),
-                new UIPropertyMetadata(
-                    null,
-                    ColumnsSourceChanged));
-
-        private static void ColumnsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            GridView gridView = obj as GridView;
-            IEnumerable<GridViewColumn> columns = e.NewValue as IEnumerable<GridViewColumn>;
-            if (gridView == null || columns == null) return;
-            gridView.Columns.Clear();
-            foreach (var column in columns)
-            {
-                gridView.Columns.Add(column);
-            }
-        }
     }
 }

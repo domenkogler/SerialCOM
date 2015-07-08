@@ -79,7 +79,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\BisModel.cs" />
+    <Compile Include="Model\SerialModel.cs" />
+    <Compile Include="ViewModel\GridViewColumns.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ObservableQueue.cs" />
+    <Compile Include="ViewModel\ObservableStack.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
