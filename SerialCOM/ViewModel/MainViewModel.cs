@@ -1,14 +1,6 @@
-using System;
-using System.ComponentModel;
-using System.IO;
+using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Documents;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 
@@ -30,10 +22,11 @@ namespace Kogler.SerialCOM
             ////}
 
             RefreshPortsCommand = new RelayCommand(RefreshPorts);
-            OpenPortCommand = new RelayCommand(OpenPort, ()=> CanOpenPort);
-            ClosePortCommand = new RelayCommand(async ()=> await ClosePortAsync(), ()=> IsPortOpen);
+            ///OpenPortCommand = new RelayCommand(OpenPort, ()=> CanOpenPort);
+            //ClosePortCommand = new RelayCommand(async ()=> await ClosePortAsync(), ()=> IsPortOpen);
 
             RefreshPorts();
+            
 
             //Model.AddSampleData();
         }
@@ -41,17 +34,15 @@ namespace Kogler.SerialCOM
         public async override void Cleanup()
         {
             base.Cleanup();
-            if (Port.IsOpen) await ClosePortAsync();
+            
         }
 
         #endregion
 
         #region << Properties >>
-
-        public FlowDocument Document { get; } = new FlowDocument();
-        private StringBuilder Log { get; set; }
-        private SerialPort Port { get; set; }
-        public SerialModel Model { get; } = new BisModel();
+        
+        public Logger Logger { get; } = new Logger();
+        public List<SerialPortSession> Sessions { get; } = new List<SerialPortSession>();
 
         private string[] _ports;
         public string[] Ports
@@ -67,7 +58,7 @@ namespace Kogler.SerialCOM
             set { Set(ref _selectedPort, value); }
         }
         
-        public bool CanSelectPort => SelectedPort != null && (Port == null || !Port.IsOpen);
+        public bool CanSelectPort => SelectedPort != null && Sessions.All(s => s.Port.PortName != SelectedPort);
 
         #endregion
 
@@ -76,177 +67,37 @@ namespace Kogler.SerialCOM
         public RelayCommand RefreshPortsCommand { get; }
         public RelayCommand OpenPortCommand { get; }
         public RelayCommand ClosePortCommand { get; }
-
-        private bool CanOpenPort => SelectedPort != null && !IsPortOpen;
-        private bool IsPortOpen => Port != null && Port.IsOpen;
-        // ReSharper disable once ExplicitCallerInfoArgument
-        private void CanSelectPortRaiseCanExecuteChanged() => RaisePropertyChanged(nameof(CanSelectPort));
-
+        
         private void RefreshPorts()
         {
             Ports = SerialPort.GetPortNames();
             if (!Ports.Any())
             {
-                Write("No COM ports availible.");
+                Logger.Write("No COM ports availible.");
                 SelectedPort = null;
             }
             if (SelectedPort == null) SelectedPort = Ports.FirstOrDefault();
-            OpenPortCommand.RaiseCanExecuteChanged();
-            RefreshPortsCommand.RaiseCanExecuteChanged();
-            ClosePortCommand.RaiseCanExecuteChanged();
+            //OpenPortCommand.RaiseCanExecuteChanged();
+            //RefreshPortsCommand.RaiseCanExecuteChanged();
+            //ClosePortCommand.RaiseCanExecuteChanged();
         }
         
-        private void OpenPort()
-        {
-            RefreshPorts();
-            if (SelectedPort == null) return;
-            if (Port != null)
-            {
-                var pName = Port.PortName;
-                Write($"{pName} port is already in use. Closing this port... If this is taking long time try to disconect the port.");
-                Task.WaitAll(ClosePortAsync());
-                Write($"Port {pName} is closed.");
-            }
-            InitProperties();
-            try
-            {
-                Port.Open();
-            }
-            catch (Exception e)
-            {
-                Write(e.Message);
-            }
-            if (!IsPortOpen) return;
-            Write($"{SelectedPort} port is open.");
-            CanSelectPortRaiseCanExecuteChanged();
-            ReadDataAsync();
-        }
-
-        private Task ClosePortAsync()
-        {
-            var close = new Task(() =>
-            {
-                try
-                {
-                    Port.Close();
-                    Write($"{Port.PortName} port is closed.");
-                    OpenPortCommand.RaiseCanExecuteChanged();
-                    ClosePortCommand.RaiseCanExecuteChanged();
-                    CanSelectPortRaiseCanExecuteChanged();
-                }
-                catch (IOException)
-                {
-                    Write("Error closing port: SerialPort was not open.");
-                    throw;
-                }
-                finally
-                {
-                    SaveFiles();
-                    CleanupProperties();
-                    CanSelectPortRaiseCanExecuteChanged();
-                }
-            });
-            close.Start();
-            return close;
-        }
-
         #endregion
 
         #region << Methods >>
-
-        private void InitProperties()
-        {
-            Port = new SerialPort(SelectedPort, 9600, Parity.None, 8, StopBits.One);
-            Log = new StringBuilder();
-        }
-
-        private void CleanupProperties()
-        {
-            Port.Dispose();
-            Port = null;
-            Log = null;
-            Model.Reset();
-        }
-
-        private void SaveFiles()
-        {
-            var file = $"{AppDomain.CurrentDomain.BaseDirectory}{SelectedPort}_{DateTime.Now.ToString("dd.MM.yyyy_HH.mm.ss")}";
-            File.AppendAllText($"{file}.txt", Log.ToString());
-            File.AppendAllText($"{file}.cvs", Model.ToString());
-            RunInUI(() =>
-            {
-                Document.Blocks.Clear();
-                Write($"Log was saved to {file}.txt");
-                Write($"Data was saved to {file}.cvs");
-            });
-        }
-
-        private byte[] buffer = new byte[10240];
-        private int bytesRead = 0;
-        private async void ReadDataAsync()
-        {
-            while (IsPortOpen)
-            {
-                var stream = Port.BaseStream;
-                Task<int> readStringTask = stream.ReadAsync(buffer, bytesRead, 1024);
-                int read = 0;
-                try
-                {
-                    read = await readStringTask;
-                    //if (read > 1)
-                    bytesRead += read;
-                }
-                catch (IOException e)
-                {
-                    Write(e.Message);
-                    return;
-                }
-                if (read <= 2) continue;
-                string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                var inline = !Model.AddData(data);
-                Write(data, inline);
-
-                buffer = new byte[10240];
-                bytesRead = 0;
-            }
-        }
         
-        private void Write(string text, bool inline = false)
-        {
-            if (string.IsNullOrEmpty(text)) return;
-            RunInUI(() =>
-            {
-                Paragraph p = null;
-                if (inline)
-                {
-                    p = Document.Blocks.LastBlock as Paragraph;
-                }
-                if (p == null)
-                {
-                    p = new Paragraph { TextAlignment = TextAlignment.Left };
-                    Document.Blocks.Add(p);
-                }
-                //var time = new Run(DateTime.Now.ToLongTimeString() + ": ");
-                //p.Inlines.Add(time);
-                var t = new Run(text);
-                p.Loaded += ParagrafToView;
-                p.Inlines.Add(t);
-                Log?.AppendLine(text);
-            });
-        }
-
-        private static async void RunInUI(Action action)
-        {
-            if (SynchronizationContext.Current != null) action();
-            else await Application.Current.Dispatcher.BeginInvoke(action);
-        }
-
-        private static void ParagrafToView(object sender, RoutedEventArgs e)
-        { 
-            var p = (Paragraph) sender;
-            p.Loaded -= ParagrafToView;
-            p.BringIntoView();
-        }
+        //private void SaveFiles()
+        //{
+        //    var file = $"{AppDomain.CurrentDomain.BaseDirectory}{SelectedPort}_{DateTime.Now.ToString("dd.MM.yyyy_HH.mm.ss")}";
+        //    File.AppendAllText($"{file}.txt", Log.ToString());
+        //    File.AppendAllText($"{file}.cvs", Model.ToString());
+        //    RunInUI(() =>
+        //    {
+        //        Document.Blocks.Clear();
+        //        Write($"Log was saved to {file}.txt");
+        //        Write($"Data was saved to {file}.cvs");
+        //    });
+        //}
 
         #endregion
     }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
@@ -7,16 +9,56 @@ using System.Windows.Data;
 
 namespace Kogler.SerialCOM
 {
+    [InheritedExport(typeof(SerialModel))]
     public abstract class SerialModel
     {
         protected SerialModel(string separator)
         {
             Separator = separator;
         }
-
+        
+        public static string Separator { get; private set; }
+        public SerialPort Port { get; private set; }
+        public string Header { get; protected set; }
         public List<string> Entries { get; } = new List<string>();
         public FixedSizedObservableQueue<string[]> Rows { get; } = new FixedSizedObservableQueue<string[]>(100);
         public IEnumerable<GridViewColumn> Columns => Split(Header).Select((h, i) => new GridViewColumn { Header = h, DisplayMemberBinding = new Binding($"[{i}]") });
+        public KeyValuePair<string, string>[] Filters { get; protected set; }
+        public string SampleData { get; protected set; }
+
+        public static IEnumerable<string> Split(string data)
+        {
+            return data.Split(new[] {Separator}, StringSplitOptions.None).Select(d=>d.Trim());
+        }
+
+        public static string Join(IEnumerable<string> data)
+        {
+            return string.Join(Separator, data);
+        }
+
+        public void AddSampleData()
+        {
+            if (string.IsNullOrEmpty(SampleData)) return;
+            var lines = SampleData.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            foreach (var line in lines)
+            {
+                AddData(line);
+            }
+        }
+
+        public void Reset()
+        {
+            Entries.Clear();
+            Rows.Clear();
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(Header);
+            Entries.ForEach(e => sb.AppendLine(e));
+            return sb.ToString();
+        }
 
         public virtual bool AddData(string data)
         {
@@ -37,46 +79,6 @@ namespace Kogler.SerialCOM
             return isNew.Value;
         }
 
-        public static IEnumerable<string> Split(string data)
-        {
-            return data.Split(new[] {Separator}, StringSplitOptions.None).Select(d=>d.Trim());
-        }
-
-        public static string Join(IEnumerable<string> data)
-        {
-            return string.Join(Separator, data);
-        }
-
-        public static string Separator { get; private set; }
-
-        private bool? IsNew(string data)
-        {
-            if (data.Length == 0) return null;
-            return IsNewData(data);
-        }
-
-        protected abstract bool IsNewData(string data);
-
-        public KeyValuePair<string, string>[] Filters { get; protected set; }
-        public string Header { get; protected set; }
-        public string SampleData { get; protected set; }
-
-        public void AddSampleData()
-        {
-            if (string.IsNullOrEmpty(SampleData)) return;
-            var lines = SampleData.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            foreach (var line in lines)
-            {
-                AddData(line);
-            }
-        }
-
-        public void Reset()
-        {
-            Entries.Clear();
-            Rows.Clear();
-        }
-
         private string FilterData()
         {
             var last = Entries.Count - 1;
@@ -86,12 +88,13 @@ namespace Kogler.SerialCOM
             return Entries[last] = data;
         }
 
-        public override string ToString()
+        private bool? IsNew(string data)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine(Header);
-            Entries.ForEach(e => sb.AppendLine(e));
-            return sb.ToString();
+            if (data.Length == 0) return null;
+            return IsNewData(data);
         }
+
+        protected abstract bool IsNewData(string data);
+        public abstract SerialPort GetSerialPort(string portName);
     }
 }

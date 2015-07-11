@@ -11,7 +11,7 @@ namespace Kogler.SerialCOM
         [TestMethod]
         public void ReadDataTest()
         {
-            var bis = new BisModel();
+            var bis = new BisVista();
             bis.AddSampleData();
 
             Assert.AreEqual(bis.Entries.Count, 5);

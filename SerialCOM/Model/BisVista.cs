@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Dynamic;
 using System.Globalization;
+using System.IO.Ports;
 using System.Linq;
 
 namespace Kogler.SerialCOM
 {
-    public class BisModel : SerialModel
+    public class BisVista : SerialModel
     {
         #region << Constants >>
 
@@ -64,7 +62,7 @@ namespace Kogler.SerialCOM
 
         #endregion
 
-        public BisModel() : base("|")
+        public BisVista() : base("|")
         {
             Header = BisHeader;
             SampleData = BisSampleData;
@@ -86,6 +84,11 @@ namespace Kogler.SerialCOM
             var min = TimeSpan.FromDays(1);
             var isNew = diff < min;
             return isNew;
+        }
+
+        public override SerialPort GetSerialPort(string portName)
+        {
+            return new SerialPort(portName, 9600, Parity.None, 8, StopBits.One);
         }
     }
 }

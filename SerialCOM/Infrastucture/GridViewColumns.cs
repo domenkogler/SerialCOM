@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 
 namespace Kogler.SerialCOM
 {
