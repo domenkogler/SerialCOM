@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:serialCom="clr-namespace:Kogler.SerialCOM"
+        xmlns:local="clr-namespace:Kogler.SerialCOM"
         mc:Ignorable="d"
         Title="SerialCOM" Height="600" Width="800" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     
@@ -14,7 +14,8 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
             <Button Content="Refresh ports" Command="{Binding RefreshPortsCommand}" Padding="5" Margin="5" />
-            <ComboBox ItemsSource="{Binding Ports}" SelectedValue="{Binding SelectedPort, Mode=TwoWay}" IsEnabled="{Binding CanSelectPort}" Padding="5" Margin="5" MinWidth="50"/>
+            <ComboBox ItemsSource="{Binding Ports}" SelectedValue="{Binding SelectedPort, Mode=TwoWay}" IsEnabled="{Binding CanSelectPort}" Padding="5" Margin="5" MinWidth="50" />
+            <ComboBox ItemsSource="{Binding Models}" SelectedValue="{Binding SelectedModel, Mode=TwoWay}" DisplayMemberPath="Metadata.Description" Padding="=5" Margin="5" MinWidth="50" />
             <Button Content="Open" Command="{Binding OpenPortCommand}" Padding="5" Margin="5" />
             <Button Content="Close" Command="{Binding ClosePortCommand}" Padding="5" Margin="5" />
         </StackPanel>
@@ -25,7 +26,7 @@
             <TabItem Header="Data">
                 <ListView ItemsSource="{Binding Model.Rows}">
                     <ListView.View>
-                        <GridView serialCom:GridViewColumns.ColumnsSource="{Binding Model.Columns}" />
+                        <GridView local:GridViewColumns.ColumnsSource="{Binding Model.Columns}" />
                     </ListView.View>
                 </ListView>
             </TabItem>

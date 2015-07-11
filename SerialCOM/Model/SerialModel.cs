@@ -9,7 +9,21 @@ using System.Windows.Data;
 
 namespace Kogler.SerialCOM
 {
-    [InheritedExport(typeof(SerialModel))]
+    [AttributeUsage(AttributeTargets.Class), MetadataAttribute]
+    public class SerialModelDefinitionAttribute : ExportAttribute, ISerialModelDescription
+    {
+        public SerialModelDefinitionAttribute(string description) : base(typeof(SerialModel))
+        {
+            Description = description;
+        }
+        public string Description { get; }
+    }
+
+    public interface ISerialModelDescription
+    {
+        string Description { get; }
+    }
+
     public abstract class SerialModel
     {
         protected SerialModel(string separator)

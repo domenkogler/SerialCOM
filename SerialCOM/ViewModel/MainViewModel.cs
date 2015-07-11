@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.IO.Ports;
 using System.Linq;
+using System.Reflection;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 
@@ -26,7 +30,7 @@ namespace Kogler.SerialCOM
             //ClosePortCommand = new RelayCommand(async ()=> await ClosePortAsync(), ()=> IsPortOpen);
 
             RefreshPorts();
-            
+            ComposeMEF();
 
             //Model.AddSampleData();
         }
@@ -35,6 +39,13 @@ namespace Kogler.SerialCOM
         {
             base.Cleanup();
             
+        }
+
+        private void ComposeMEF()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetExecutingAssembly());
+            var container = new CompositionContainer(catalog);
+            container.ComposeParts(this);
         }
 
         #endregion
@@ -52,13 +63,34 @@ namespace Kogler.SerialCOM
         }
 
         private string _selectedPort;
+        
+
         public string SelectedPort
         {
             get { return _selectedPort; }
-            set { Set(ref _selectedPort, value); }
+            set { Set(ref _selectedPort, value);}
         }
-        
+
         public bool CanSelectPort => SelectedPort != null && Sessions.All(s => s.Port.PortName != SelectedPort);
+        
+        private IEnumerable<Lazy<SerialModel, ISerialModelDescription>> _models;
+        [ImportMany(typeof(SerialModel))]
+        public IEnumerable<Lazy<SerialModel, ISerialModelDescription>> Models
+        {
+            get { return _models; }
+            set
+            {
+                Set(ref _models, value);
+                SelectedModel = Models.FirstOrDefault();
+            }
+        }
+
+        private Lazy<SerialModel, ISerialModelDescription> _selectedModel;
+        public Lazy<SerialModel, ISerialModelDescription> SelectedModel
+        {
+            get { return _selectedModel; }
+            set { Set(ref _selectedModel, value); }
+        }
 
         #endregion
 
@@ -70,16 +102,14 @@ namespace Kogler.SerialCOM
         
         private void RefreshPorts()
         {
-            Ports = SerialPort.GetPortNames();
+            var usedPorts = Sessions.Select(s => s.Port.PortName).ToArray();
+            Ports = SerialPort.GetPortNames().Where(p => !usedPorts.Contains(p)).ToArray();
             if (!Ports.Any())
             {
-                Logger.Write("No COM ports availible.");
+                if (!Sessions.Any()) Logger.Write("No COM ports availible.");
                 SelectedPort = null;
             }
             if (SelectedPort == null) SelectedPort = Ports.FirstOrDefault();
-            //OpenPortCommand.RaiseCanExecuteChanged();
-            //RefreshPortsCommand.RaiseCanExecuteChanged();
-            //ClosePortCommand.RaiseCanExecuteChanged();
         }
         
         #endregion

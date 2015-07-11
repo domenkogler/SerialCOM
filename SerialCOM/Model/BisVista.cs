@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
 
 namespace Kogler.SerialCOM
 {
+    [SerialModelDefinition(nameof(BisVista))]
     public class BisVista : SerialModel
     {
         #region << Constants >>
