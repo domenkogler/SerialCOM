@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>SerialCOM.App</StartupObject>
+    <StartupObject>Kogler.SerialCOM.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight, Version=5.1.1.35049, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
@@ -64,6 +64,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.1.1.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -106,16 +108,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\PortsControl.xaml.cs">
+      <DependentUpon>PortsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Infrastucture\Logger.cs" />
+    <Compile Include="Infrastucture\ObservableDictionary.cs" />
     <Compile Include="Model\BisVista.cs" />
     <Compile Include="Model\SerialModel.cs" />
     <Compile Include="Infrastucture\GridViewColumns.cs" />
+    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="ViewModel\AnchorableViewModel.cs" />
+    <Compile Include="ViewModel\DocumentViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Infrastucture\ObservableQueue.cs" />
     <Compile Include="Infrastucture\ObservableStack.cs" />
     <Compile Include="Infrastucture\SerialPortSession.cs" />
-    <Compile Include="ViewModel\DocumentPanesTemplateSelector.cs" />
+    <Compile Include="ViewModel\PanesTemplateSelector.cs" />
+    <Compile Include="ViewModel\PaneViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Page Include="Controls\PortsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -163,6 +177,7 @@
     <Resource Include="SampleData\COM1_02.07.2015_12.08.53.txt" />
     <Resource Include="SampleData\COM1_02.07.2015_12.11.29.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

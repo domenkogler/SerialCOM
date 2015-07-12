@@ -7,13 +7,28 @@ using System.IO.Ports;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using Xceed.Wpf.AvalonDock.Controls;
-using Xceed.Wpf.AvalonDock.Layout;
 
 namespace Kogler.SerialCOM
 {
+    public static class MefService
+    {
+        static MefService()
+        {
+            Catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
+        }
+
+        public static AggregateCatalog Catalog { get; } = new AggregateCatalog();
+        public static CompositionContainer Container { get; } = new CompositionContainer(Catalog);
+
+        public static void ComposeParts(params object[] parts)
+        {
+            Container.ComposeParts(parts);
+        }
+    }
+
     public class MainViewModel : ViewModelBase
     {
         #region << Constructor & Desctructor >>
@@ -25,16 +40,20 @@ namespace Kogler.SerialCOM
                 Sessions.Add(new SerialPortSession("COM1", new BisVista()));
                 
             }
-            Anchorables.Add(new LayoutAnchorControl());new LayoutAnchorable {Title = "Ports", Content = Resource("Ports") });
-            Anchorables.Add(new LayoutAnchorable { Title = "Sessions", Content = Resource("Sessions") });
+
+            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+            {
+
+                Anchorables.Add(new AnchorableViewModel {Title = "Ports", Content = Resource("Ports")});
+                Anchorables.Add(new AnchorableViewModel {Title = "Sessions", Content = Resource("Sessions")});
+
+            }));
 
             RefreshPortsCommand = new RelayCommand(RefreshPorts);
             OpenPortCommand = new RelayCommand(OpenPort);//, ()=> CanOpenPort);
             //ClosePortCommand = new RelayCommand(async ()=> await ClosePortAsync(), ()=> IsPortOpen);
 
             RefreshPorts();
-            ComposeMEF();
-
             //Model.AddSampleData();
         }
 
@@ -51,15 +70,10 @@ namespace Kogler.SerialCOM
 
         private static T Resource<T>(string key) where T : class
         {
-            return Application.Current.MainWindow.Resources[key] as T;
+            return Application.Current.Resources[key] as T;
         }
 
-        private void ComposeMEF()
-        {
-            var catalog = new AssemblyCatalog(Assembly.GetExecutingAssembly());
-            var container = new CompositionContainer(catalog);
-            container.ComposeParts(this);
-        }
+        
 
         #endregion
 
@@ -142,6 +156,7 @@ namespace Kogler.SerialCOM
         {
             var session = new SerialPortSession(SelectedPort, SelectedModel.Value);
             Sessions.Add(session);
+            Documents.Add(session.Model);
             RefreshPorts();
             IsSessionsActive = true;
         }

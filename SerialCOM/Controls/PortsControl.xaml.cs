@@ -1,8 +1,8 @@
 ﻿namespace Kogler.SerialCOM
 {
-    public partial class MainWindow
+    public partial class PortsControl
     {
-        public MainWindow()
+        public PortsControl()
         {
             InitializeComponent();
         }
