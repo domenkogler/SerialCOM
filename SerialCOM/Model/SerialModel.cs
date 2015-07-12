@@ -38,6 +38,7 @@ namespace Kogler.SerialCOM
         public FixedSizedObservableQueue<string[]> Rows { get; } = new FixedSizedObservableQueue<string[]>(100);
         public IEnumerable<GridViewColumn> Columns => Split(Header).Select((h, i) => new GridViewColumn { Header = h, DisplayMemberBinding = new Binding($"[{i}]") });
         public KeyValuePair<string, string>[] Filters { get; protected set; }
+        public abstract string Description { get; }
         public string SampleData { get; protected set; }
 
         public static IEnumerable<string> Split(string data)

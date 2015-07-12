@@ -7,11 +7,12 @@ using System.Linq;
 
 namespace Kogler.SerialCOM
 {
-    [SerialModelDefinition(nameof(BisVista))]
+    [SerialModelDefinition(BisDescription)]
     public class BisVista : SerialModel
     {
         #region << Constants >>
 
+        public const string BisDescription = nameof(BisVista);
         public const string BisHeader = "TIME               |DSC     |PIC     |Filters |Alarm   |Lo-Limit|Hi-Limit|Silence |SR11    |SEF07   |BISBIT00|BIS     |TOTPOW07|EMGLOW01|SQI09   |IMPEDNCE|ARTF2   |SR11    |SEF07   |BISBIT00|BIS     |TOTPOW07|EMGLOW01|SQI09   |IMPEDNCE|ARTF2   |SR11    |SEF07   |BISBIT00|BIS     |TOTPOW07|EMGLOW01|SQI09   |IMPEDNCE|ARTF2   |";
         public const string DateTimeFormat = "MM/dd/yyyy HH:mm:ss";
         public const string BisSampleData =
@@ -92,5 +93,7 @@ namespace Kogler.SerialCOM
         {
             return new SerialPort(portName, 9600, Parity.None, 8, StopBits.One);
         }
+
+        public override string Description => BisDescription;
     }
 }

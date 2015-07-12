@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Text;
@@ -24,6 +25,13 @@ namespace Kogler.SerialCOM
         public Logger Logger { get; }  = new Logger();
         public SerialModel Model { get; }
         public SerialPort Port { get; }
+
+        public KeyValuePair<string, object>[] Documents =>
+            new[]
+            {
+                new KeyValuePair<string, object>(Model.Description, Model),
+                new KeyValuePair<string, object>("Log", Logger)
+            };
 
         private void OpenPort()
         {

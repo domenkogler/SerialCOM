@@ -114,6 +114,7 @@
     <Compile Include="Infrastucture\ObservableQueue.cs" />
     <Compile Include="Infrastucture\ObservableStack.cs" />
     <Compile Include="Infrastucture\SerialPortSession.cs" />
+    <Compile Include="ViewModel\DocumentPanesTemplateSelector.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

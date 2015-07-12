@@ -4,22 +4,47 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kogler.SerialCOM"
+        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         mc:Ignorable="d"
-        Title="SerialCOM" Height="600" Width="800" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
-    
+        Title="SerialCOM" Height="300" Width="800" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+    <Window.Resources>
+        <DataTemplate x:Key="Sessions">
+            <TreeView ItemsSource="{Binding Sessions}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Documents}">
+                        <TextBlock Text="{Binding Port.PortName}" />
+                        <HierarchicalDataTemplate.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Key}" />
+                            </DataTemplate>
+                        </HierarchicalDataTemplate.ItemTemplate>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </DataTemplate>
+        <DataTemplate x:Key="Ports">
+            <StackPanel Orientation="Vertical" Margin="5">
+                <Button Content="Refresh ports" Command="{Binding RefreshPortsCommand}" Padding="5" Margin="5" />
+                <TextBlock Text="Port:" Margin="5,5,5,0"/>
+                <ComboBox ItemsSource="{Binding Ports}" SelectedValue="{Binding SelectedPort, Mode=TwoWay}" IsEnabled="{Binding CanSelectPort}" Padding="5" Margin="5" MinWidth="50" />
+                <TextBlock Text="Device:" Margin="5,5,5,0"/>
+                <ComboBox ItemsSource="{Binding Models}" SelectedValue="{Binding SelectedModel, Mode=TwoWay}" DisplayMemberPath="Metadata.Description" Padding="5" Margin="5" MinWidth="50" />
+                <Button Content="Open" Command="{Binding OpenPortCommand}" Padding="5" Margin="5" />
+                <!--<Button Content="Close" Command="{Binding ClosePortCommand}" Padding="5" Margin="5" />-->
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
-            <Button Content="Refresh ports" Command="{Binding RefreshPortsCommand}" Padding="5" Margin="5" />
-            <ComboBox ItemsSource="{Binding Ports}" SelectedValue="{Binding SelectedPort, Mode=TwoWay}" IsEnabled="{Binding CanSelectPort}" Padding="5" Margin="5" MinWidth="50" />
-            <ComboBox ItemsSource="{Binding Models}" SelectedValue="{Binding SelectedModel, Mode=TwoWay}" DisplayMemberPath="Metadata.Description" Padding="=5" Margin="5" MinWidth="50" />
-            <Button Content="Open" Command="{Binding OpenPortCommand}" Padding="5" Margin="5" />
-            <Button Content="Close" Command="{Binding ClosePortCommand}" Padding="5" Margin="5" />
-        </StackPanel>
-        <TabControl Grid.Row="1">
+        <Menu>
+            <MenuItem Header="File">
+                <MenuItem Header="Save" />
+            </MenuItem>
+        </Menu>
+        <!--<TabControl Grid.Row="1">
             <TabItem Header="Log">
                 <FlowDocumentScrollViewer Document="{Binding Document, Mode=OneTime}" Grid.Row="1" Grid.Column="0" BorderBrush="DarkGray" BorderThickness="1" />
             </TabItem>
@@ -30,6 +55,40 @@
                     </ListView.View>
                 </ListView>
             </TabItem>
-        </TabControl>
+        </TabControl>-->
+        <xcad:DockingManager Grid.Row="1"
+                             AnchorablesSource="{Binding Anchorables}"
+                             DocumentsSource="{Binding Sessions}"
+                             ActiveContent="{Binding ActiveContent, Mode=TwoWay}">
+            <xcad:DockingManager.LayoutItemTemplateSelector>
+                <local:PanesTemplateSelector>
+                    <local:PanesTemplateSelector.SerialModelTemplate>
+                        <DataTemplate>
+                            <ListView ItemsSource="{Binding Model.Rows}">
+                                <ListView.View>
+                                    <GridView local:GridViewColumns.ColumnsSource="{Binding Model.Columns}" />
+                                </ListView.View>
+                            </ListView>
+                        </DataTemplate>
+                    </local:PanesTemplateSelector.SerialModelTemplate>
+                    <local:PanesTemplateSelector.LoggerTemplate>
+                        <DataTemplate>
+                            <FlowDocumentScrollViewer Document="{Binding Document, Mode=OneTime}" BorderBrush="DarkGray" BorderThickness="1" />
+                        </DataTemplate>
+                    </local:PanesTemplateSelector.LoggerTemplate>
+                    <local:PanesTemplateSelector.AnchorableTemplate>
+                        <DataTemplate>
+                            <
+                        </DataTemplate>
+                    </local:PanesTemplateSelector.AnchorableTemplate>
+                </local:PanesTemplateSelector>
+            </xcad:DockingManager.LayoutItemTemplateSelector>
+            <xcad:LayoutRoot>
+                <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutAnchorablePane DockWidth="120" />
+                    <xcad:LayoutDocumentPane />
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
     </Grid>
 </Window>

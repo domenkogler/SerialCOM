@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO.Ports;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using Xceed.Wpf.AvalonDock.Controls;
+using Xceed.Wpf.AvalonDock.Layout;
 
 namespace Kogler.SerialCOM
 {
@@ -16,17 +20,16 @@ namespace Kogler.SerialCOM
 
         public MainViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            if (IsInDesignMode)
+            {
+                Sessions.Add(new SerialPortSession("COM1", new BisVista()));
+                
+            }
+            Anchorables.Add(new LayoutAnchorControl());new LayoutAnchorable {Title = "Ports", Content = Resource("Ports") });
+            Anchorables.Add(new LayoutAnchorable { Title = "Sessions", Content = Resource("Sessions") });
 
             RefreshPortsCommand = new RelayCommand(RefreshPorts);
-            ///OpenPortCommand = new RelayCommand(OpenPort, ()=> CanOpenPort);
+            OpenPortCommand = new RelayCommand(OpenPort);//, ()=> CanOpenPort);
             //ClosePortCommand = new RelayCommand(async ()=> await ClosePortAsync(), ()=> IsPortOpen);
 
             RefreshPorts();
@@ -35,10 +38,20 @@ namespace Kogler.SerialCOM
             //Model.AddSampleData();
         }
 
-        public async override void Cleanup()
-        {
-            base.Cleanup();
+        //public async override void Cleanup()
+        //{
+        //    base.Cleanup();
             
+        //}
+
+        private static object Resource(string key)
+        {
+            return Resource<object>(key);
+        }
+
+        private static T Resource<T>(string key) where T : class
+        {
+            return Application.Current.MainWindow.Resources[key] as T;
         }
 
         private void ComposeMEF()
@@ -53,7 +66,9 @@ namespace Kogler.SerialCOM
         #region << Properties >>
         
         public Logger Logger { get; } = new Logger();
-        public List<SerialPortSession> Sessions { get; } = new List<SerialPortSession>();
+        public ObservableCollection<SerialPortSession> Sessions { get; } = new ObservableCollection<SerialPortSession>();
+        public ObservableCollection<object> Documents { get; } = new ObservableCollection<object>(); 
+        public ObservableCollection<object> Anchorables { get; } = new ObservableCollection<object>();
 
         private string[] _ports;
         public string[] Ports
@@ -92,6 +107,13 @@ namespace Kogler.SerialCOM
             set { Set(ref _selectedModel, value); }
         }
 
+        private bool _isSessionsActive;
+        public bool IsSessionsActive
+        {
+            get { return _isSessionsActive; }
+            set { Set(ref _isSessionsActive, value); }
+        }
+
         #endregion
 
         #region << Commands >>
@@ -115,7 +137,15 @@ namespace Kogler.SerialCOM
         #endregion
 
         #region << Methods >>
-        
+
+        private void OpenPort()
+        {
+            var session = new SerialPortSession(SelectedPort, SelectedModel.Value);
+            Sessions.Add(session);
+            RefreshPorts();
+            IsSessionsActive = true;
+        }
+
         //private void SaveFiles()
         //{
         //    var file = $"{AppDomain.CurrentDomain.BaseDirectory}{SelectedPort}_{DateTime.Now.ToString("dd.MM.yyyy_HH.mm.ss")}";
