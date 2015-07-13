@@ -55,6 +55,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Plugins\BisVista\BisVista.csproj">
+      <Project>{c78cbd55-19e8-4671-a940-4ceeecf607c3}</Project>
+      <Name>BisVista</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SerialCOM.Shared\SerialCOM.Shared.csproj">
+      <Project>{baba42c3-f708-483b-8a49-70bad04eacc8}</Project>
+      <Name>SerialCOM.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SerialCOM\SerialCOM.csproj">
       <Project>{b47be42d-fd78-4f49-93e2-fb6aba39787d}</Project>
       <Name>SerialCOM</Name>

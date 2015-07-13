@@ -8,6 +8,10 @@ namespace Kogler.SerialCOM
         public App()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            SimpleIoc.Default.Register<LoggerService>();
+            SimpleIoc.Default.Register<SessionsService>();
+            SimpleIoc.Default.Register<DocumentsService>();
+            MefService.Init();
         }
     }
 }

@@ -108,23 +108,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Export.cs" />
     <Compile Include="Controls\PortsControl.xaml.cs">
       <DependentUpon>PortsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Infrastucture\Logger.cs" />
-    <Compile Include="Infrastucture\ObservableDictionary.cs" />
-    <Compile Include="Model\BisVista.cs" />
-    <Compile Include="Model\SerialModel.cs" />
     <Compile Include="Infrastucture\GridViewColumns.cs" />
-    <Compile Include="ViewModelBase.cs" />
-    <Compile Include="ViewModel\AnchorableViewModel.cs" />
-    <Compile Include="ViewModel\DocumentViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="Infrastucture\ObservableQueue.cs" />
-    <Compile Include="Infrastucture\ObservableStack.cs" />
-    <Compile Include="Infrastucture\SerialPortSession.cs" />
     <Compile Include="ViewModel\PanesTemplateSelector.cs" />
-    <Compile Include="ViewModel\PaneViewModel.cs" />
+    <Compile Include="Controls\PortsControlViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="Controls\PortsControl.xaml">
       <SubType>Designer</SubType>
@@ -177,7 +168,15 @@
     <Resource Include="SampleData\COM1_02.07.2015_12.08.53.txt" />
     <Resource Include="SampleData\COM1_02.07.2015_12.11.29.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SerialCom.Shared\SerialCOM.Shared.csproj">
+      <Project>{baba42c3-f708-483b-8a49-70bad04eacc8}</Project>
+      <Name>SerialCOM.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

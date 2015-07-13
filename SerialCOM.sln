@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialCOM", "SerialCOM\Seri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{3901B9D5-DD76-42CE-A6FE-3EBE17DB6EF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialCOM.Shared", "SerialCOM.Shared\SerialCOM.Shared.csproj", "{BABA42C3-F708-483B-8A49-70BAD04EACC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{504F9712-99C4-4AD7-B6DD-045C0E42AFA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BisVista", "Plugins\BisVista\BisVista.csproj", "{C78CBD55-19E8-4671-A940-4CEEECF607C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +27,19 @@ Global
 		{3901B9D5-DD76-42CE-A6FE-3EBE17DB6EF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3901B9D5-DD76-42CE-A6FE-3EBE17DB6EF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3901B9D5-DD76-42CE-A6FE-3EBE17DB6EF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BABA42C3-F708-483B-8A49-70BAD04EACC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BABA42C3-F708-483B-8A49-70BAD04EACC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BABA42C3-F708-483B-8A49-70BAD04EACC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BABA42C3-F708-483B-8A49-70BAD04EACC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C78CBD55-19E8-4671-A940-4CEEECF607C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C78CBD55-19E8-4671-A940-4CEEECF607C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C78CBD55-19E8-4671-A940-4CEEECF607C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C78CBD55-19E8-4671-A940-4CEEECF607C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C78CBD55-19E8-4671-A940-4CEEECF607C3} = {504F9712-99C4-4AD7-B6DD-045C0E42AFA2}
 	EndGlobalSection
 EndGlobal

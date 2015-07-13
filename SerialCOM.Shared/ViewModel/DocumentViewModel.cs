@@ -1,6 +1,6 @@
 namespace Kogler.SerialCOM
 {
-    class DocumentViewModel : PaneViewModel
+    public class DocumentViewModel : PaneViewModel
     {
         //public DocumentViewModel(string title)
         //{

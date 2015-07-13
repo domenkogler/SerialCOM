@@ -1,10 +1,8 @@
-using System.Windows;
 using System.Windows.Media;
-using GalaSoft.MvvmLight;
 
 namespace Kogler.SerialCOM
 {
-    class PaneViewModel : ViewModelBase
+    public class PaneViewModel : ViewModelBase
     {
         public static ImageSourceConverter ISC = new ImageSourceConverter();
 

@@ -1,6 +1,9 @@
+using System.ComponentModel.Composition;
+
 namespace Kogler.SerialCOM
 {
-    class AnchorableViewModel : PaneViewModel
+    [InheritedExport(typeof(AnchorableViewModel))]
+    public abstract class AnchorableViewModel : PaneViewModel
     {
         private bool _isVisible = true;
         public bool IsVisible
