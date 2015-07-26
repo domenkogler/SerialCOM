@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Windows;
-using GalaSoft.MvvmLight.Ioc;
+using Kogler.Framework;
 
 namespace Kogler.SerialCOM
 {
@@ -14,7 +12,7 @@ namespace Kogler.SerialCOM
         {
             DocumentsService = documentsService;
 
-            if (IsInDesignMode)
+            if (Dispatcher.IsInDesignMode)
             {
                 //var sessions = SimpleIoc.Default.GetInstance<SessionsService>().Sessions;
                 //sessions.Add(new SerialPortSession("COM1", new BisVista()));

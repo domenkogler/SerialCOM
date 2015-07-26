@@ -24,7 +24,7 @@ namespace Kogler.SerialCOM
         string Description { get; }
     }
 
-    public abstract class SerialModel
+    public abstract class SerialModel : ISerialModelDescription
     {
         protected SerialModel(string separator)
         {

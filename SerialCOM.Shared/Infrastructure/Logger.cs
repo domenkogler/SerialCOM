@@ -31,7 +31,7 @@ namespace Kogler.SerialCOM
                 var t = new Run(text);
                 p.Loaded += ParagrafToView;
                 p.Inlines.Add(t);
-                Log?.AppendLine(text);
+                Log.AppendLine(text);
             });
         }
 

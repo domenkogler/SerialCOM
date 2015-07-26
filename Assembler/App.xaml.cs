@@ -7,9 +7,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime;
-using System.Waf.Applications;
 using System.Windows;
 using System.Windows.Threading;
+using Kogler.Framework;
 
 namespace Kogler.SerialCom.Assembler
 {
@@ -67,7 +67,7 @@ namespace Kogler.SerialCom.Assembler
             base.OnExit(e);
         }
 
-        private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private static void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             HandleException(e.Exception, false);
         }
