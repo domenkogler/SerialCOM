@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialCOM", "SerialCOM\SerialCOM.csproj", "{B47BE42D-FD78-4F49-93E2-FB6ABA39787D}"
 EndProject
@@ -12,6 +12,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{504F9712-99C4-4AD7-B6DD-045C0E42AFA2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BisVista", "Plugins\BisVista\BisVista.csproj", "{C78CBD55-19E8-4671-A940-4CEEECF607C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler", "Assembler\Assembler.csproj", "{05C042DF-3826-4DD4-8569-0D1BC74C6498}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{78B7D77C-A2E3-49FD-A9D1-7455FE27C6FF}"
+	ProjectSection(SolutionItems) = preProject
+		Nuget.Config = Nuget.Config
+		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +43,10 @@ Global
 		{C78CBD55-19E8-4671-A940-4CEEECF607C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C78CBD55-19E8-4671-A940-4CEEECF607C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C78CBD55-19E8-4671-A940-4CEEECF607C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05C042DF-3826-4DD4-8569-0D1BC74C6498}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05C042DF-3826-4DD4-8569-0D1BC74C6498}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05C042DF-3826-4DD4-8569-0D1BC74C6498}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05C042DF-3826-4DD4-8569-0D1BC74C6498}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

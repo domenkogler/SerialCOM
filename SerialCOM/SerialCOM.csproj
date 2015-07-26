@@ -82,6 +82,10 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfApplicationFramework, Version=3.0.0.450, Culture=neutral, PublicKeyToken=1d6a5af5fe952afb, processorArchitecture=MSIL">
+      <HintPath>..\packages\waf.3.0.0\lib\net45\WpfApplicationFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\AvalonDock.2.0.2000\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
       <Private>True</Private>
