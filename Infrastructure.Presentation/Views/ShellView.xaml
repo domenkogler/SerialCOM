@@ -1,0 +1,59 @@
+﻿<Window x:Class="Kogler.SerialCOM.Infrastructure.Presentation.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:presentation="clr-namespace:Kogler.SerialCOM.Infrastructure.Presentation"
+        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+        Title="{Binding Title}" Height="600" Width="800"
+        d:DataContext="{d:DesignInstance presentation:DesignShellViewModel}">
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding AboutCommand}" Key="F1"/>
+    </Window.InputBindings>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" ItemsSource="{Binding ShellService.MenuItems}">
+            <Menu.ItemContainerStyle>
+                <Style TargetType="{x:Type MenuItem}">
+                    <Setter Property="Header" Value="{Binding Text}" />
+                    <Setter Property="Command" Value="{Binding Command}" />
+                    <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
+                    <Setter Property="ItemsSource" Value="{Binding Items}"/>
+                    
+                    <!--<Setter Property="Icon">
+                        <Setter.Value>
+                            <Image Source="{Binding MenuIcon}" Height="16px" Width="16px" />
+                        </Setter.Value>
+                    </Setter>-->
+                </Style>
+            </Menu.ItemContainerStyle>
+        </Menu>
+        <xcad:DockingManager AnchorablesSource="{Binding DocumentsService.Anchorables}"
+                             DocumentsSource="{Binding DocumentsService.Documents}"
+                             ActiveContent="{Binding DocumentsService.ActiveContent, Mode=TwoWay}">
+            <xcad:DockingManager.LayoutItemTemplate>
+                <DataTemplate>
+                    <ContentPresenter Content="{Binding View}" />
+                </DataTemplate>
+            </xcad:DockingManager.LayoutItemTemplate>
+            <xcad:DockingManager.LayoutItemContainerStyle>
+                <Style TargetType="{x:Type xcad:LayoutAnchorableItem}">
+                    <Setter Property="Title" Value="{Binding Title}"/>
+                    <Setter Property="IconSource" Value="{Binding IconSource}"/>
+                    <Setter Property="Visibility" Value="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource VisibilityConverter}}"/>
+                    <Setter Property="ContentId" Value="{Binding ContentId}"/>
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                    <Setter Property="IsActive" Value="{Binding IsActive, Mode=TwoWay}"/>
+                    <Setter Property="CloseCommand" Value="{Binding CloseCommand}"/>
+                </Style>
+            </xcad:DockingManager.LayoutItemContainerStyle>
+            <xcad:LayoutRoot>
+                <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutAnchorablePane DockWidth="120" />
+                    <xcad:LayoutDocumentPane />
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
+    </DockPanel>
+</Window>

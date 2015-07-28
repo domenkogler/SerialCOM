@@ -44,14 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BisVista.cs" />
+    <None Include="BisVista.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\SerialCOM.Shared\SerialCOM.Shared.csproj">
-      <Project>{baba42c3-f708-483b-8a49-70bad04eacc8}</Project>
-      <Name>SerialCOM.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

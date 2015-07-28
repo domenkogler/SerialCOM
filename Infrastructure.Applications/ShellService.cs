@@ -6,7 +6,7 @@ using Kogler.SerialCOM.Infrastructure.Shared;
 namespace Kogler.SerialCOM.Infrastructure.Applications
 {
     [Export(typeof(IShellService)), Export]
-    public class ShellService : Model, IShellService
+    internal class ShellService : Model, IShellService
     {
         [ImportingConstructor]
         public ShellService(Lazy<IShellViewModel> shellViewModel)
@@ -24,16 +24,6 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
         {
             get { return contentView; }
             set { Set(ref contentView, value); }
-        }
-
-        public void AddMenuItems(params MenuItem[] items)
-        {
-            
-        }
-
-        public void RemoveMenuItems(params MenuItem[] items)
-        {
-            
         }
     }
 }

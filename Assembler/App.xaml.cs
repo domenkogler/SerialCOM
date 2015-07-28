@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime;
 using System.Windows;
 using System.Windows.Threading;
@@ -25,8 +25,7 @@ namespace Kogler.SerialCom.Assembler
 
         public App()
         {
-            var profileRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                ApplicationInfo.ProductName, "ProfileOptimization");
+            var profileRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationInfo.ProductName, "ProfileOptimization");
             Directory.CreateDirectory(profileRoot);
             ProfileOptimization.SetProfileRoot(profileRoot);
             ProfileOptimization.StartProfile("Startup.profile");
@@ -39,10 +38,10 @@ namespace Kogler.SerialCom.Assembler
 
             DispatcherUnhandledException += AppDispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += AppDomainUnhandledException;
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             catalog = new AggregateCatalog();
-            // Add the WpfApplicationFramework assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ViewModel).Assembly));
+            catalog.Catalogs.Add(new DirectoryCatalog("MEF"));
             catalog.Catalogs.Add(new DirectoryCatalog("Plugins"));
 
             container = new CompositionContainer(catalog, CompositionOptions.DisableSilentRejection);
@@ -50,12 +49,24 @@ namespace Kogler.SerialCom.Assembler
             batch.AddExportedValue(container);
             container.Compose(batch);
 
+            // Initialize all presentation services
+            var presentationServices = container.GetExportedValues<IPresentationService>();
+            foreach (var presentationService in presentationServices) { presentationService.Initialize(); }
+            
             // Initialize and run all module controllers
             moduleControllers = container.GetExportedValues<IModuleController>();
             // ReSharper disable PossibleMultipleEnumeration
             foreach (var moduleController in moduleControllers) { moduleController.Initialize(); }
             foreach (var moduleController in moduleControllers) { moduleController.Run(); }
             // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        private Assembly AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var index = args.Name.IndexOf(',');
+            var name = index < 0 ? args.Name : args.Name.Substring(0, index);
+            var ass = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MEF", name + ".dll"));
+            return ass;
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -85,9 +96,7 @@ namespace Kogler.SerialCom.Assembler
 
             if (!isTerminating)
             {
-                MessageBox.Show(string.Format(CultureInfo.CurrentCulture,
-                        "Unknown application error\n\n{0}", e.ToString()),
-                    ApplicationInfo.ProductName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Unknown application error\n\n{e}", ApplicationInfo.ProductName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

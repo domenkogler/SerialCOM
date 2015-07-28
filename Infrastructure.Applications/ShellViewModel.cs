@@ -7,17 +7,22 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
 {
     public interface IShellViewModel : IViewModel
     {
+        ICommand AboutCommand { get; }
+        IShellService ShellService { get; }
+        IDocumentsService DocumentsService { get; }
         void Show();
+        string Title { get; }
     }
 
     [Export, Export(typeof(IShellViewModel))]
     internal class ShellViewModel : ViewModel<IShellView>, IShellViewModel
     {
         [ImportingConstructor]
-        public ShellViewModel(IShellView view, IMessageService messageService, ShellService shellService) : base(view)
+        public ShellViewModel(IShellView view, IMessageService messageService, IShellService shellService, IDocumentsService documentsService) : base(view)
         {
             this.messageService = messageService;
             ShellService = shellService;
+            DocumentsService = documentsService;
 
             view.Closed += ViewClosed;
 
@@ -32,12 +37,17 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
             //    ViewCore.Width = Settings.Default.Width;
             //}
             //ViewCore.IsMaximized = Settings.Default.IsMaximized;
+
+            AboutCommand = new Command(ShowAboutMessage);
+
+            ShellService.MenuItems.AddToHierarchy(new MenuItem {GroupName = "Help", Text = "About", Command = AboutCommand});
         }
 
         private readonly IMessageService messageService;
 
         public string Title => ApplicationInfo.ProductName;
         public IShellService ShellService { get; }
+        public IDocumentsService DocumentsService { get; }
 
         public void Show()
         {
@@ -57,6 +67,8 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
             //Settings.Default.Width = ViewCore.Width;
             //Settings.Default.IsMaximized = ViewCore.IsMaximized;
         }
+
+        public ICommand AboutCommand { get; }
 
         private void ShowAboutMessage()
         {
