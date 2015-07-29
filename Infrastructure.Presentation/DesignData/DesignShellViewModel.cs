@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Kogler.Framework;
 using Kogler.SerialCOM.Infrastructure.Applications;

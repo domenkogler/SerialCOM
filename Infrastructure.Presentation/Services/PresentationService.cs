@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.IO;
-using System.Reflection;
+﻿using System.ComponentModel.Composition;
 using System.Windows;
 using Kogler.Framework;
 
@@ -25,10 +22,7 @@ namespace Kogler.SerialCOM.Infrastructure.Presentation
 
             foreach (var resourcePath in moduleResources)
             {
-                mergedDictionaries.Add(new ResourceDictionary
-                {
-                    Source = resourceAssembly.GetPackUri(resourcePath)
-                });
+                mergedDictionaries.Add(new ResourceDictionary { Source = resourceAssembly.GetPackUri(resourcePath) });
             }
         }
     }

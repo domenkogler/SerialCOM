@@ -13,16 +13,12 @@ using Kogler.Framework;
 
 namespace Kogler.SerialCom.Assembler
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         private AggregateCatalog catalog;
         private CompositionContainer container;
         private IEnumerable<IModuleController> moduleControllers;
-
-
+        
         public App()
         {
             var profileRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationInfo.ProductName, "ProfileOptimization");
@@ -30,8 +26,7 @@ namespace Kogler.SerialCom.Assembler
             ProfileOptimization.SetProfileRoot(profileRoot);
             ProfileOptimization.StartProfile("Startup.profile");
         }
-
-
+        
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -41,6 +36,7 @@ namespace Kogler.SerialCom.Assembler
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             catalog = new AggregateCatalog();
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(Model).Assembly));
             catalog.Catalogs.Add(new DirectoryCatalog("MEF"));
             catalog.Catalogs.Add(new DirectoryCatalog("Plugins"));
 

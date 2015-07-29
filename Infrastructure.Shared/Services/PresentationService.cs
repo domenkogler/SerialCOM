@@ -20,12 +20,9 @@ namespace Kogler.SerialCOM.Infrastructure.Shared
             var resourceAssembly = GetType().Assembly;
             var mergedDictionaries = Application.Current.Resources.MergedDictionaries;
 
-            foreach (string resourcePath in moduleResources)
+            foreach (var resourcePath in moduleResources)
             {
-                mergedDictionaries.Add(new ResourceDictionary
-                {
-                    Source = resourceAssembly.GetPackUri(resourcePath)
-                });
+                mergedDictionaries.Add(new ResourceDictionary { Source = resourceAssembly.GetPackUri(resourcePath) });
             }
         }
     }

@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Applications", "Infrastructure.Applications\Infrastructure.Applications.csproj", "{49ADA897-91E7-476D-8B34-DA6A9E056870}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Presentation", "Infrastructure.Presentation\Infrastructure.Presentation.csproj", "{AA7140A8-26DC-4DA1-B49D-0FABC6B1EBCB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Presentation", "Infrastructure.Presentation\Infrastructure.Presentation.csproj", "{E16ED031-14E0-49D1-B959-5F3E67E6E1BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +45,10 @@ Global
 		{49ADA897-91E7-476D-8B34-DA6A9E056870}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49ADA897-91E7-476D-8B34-DA6A9E056870}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49ADA897-91E7-476D-8B34-DA6A9E056870}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA7140A8-26DC-4DA1-B49D-0FABC6B1EBCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA7140A8-26DC-4DA1-B49D-0FABC6B1EBCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA7140A8-26DC-4DA1-B49D-0FABC6B1EBCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA7140A8-26DC-4DA1-B49D-0FABC6B1EBCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E16ED031-14E0-49D1-B959-5F3E67E6E1BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E16ED031-14E0-49D1-B959-5F3E67E6E1BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E16ED031-14E0-49D1-B959-5F3E67E6E1BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E16ED031-14E0-49D1-B959-5F3E67E6E1BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +57,6 @@ Global
 		{C78CBD55-19E8-4671-A940-4CEEECF607C3} = {504F9712-99C4-4AD7-B6DD-045C0E42AFA2}
 		{95C70119-2692-4F28-B5F5-E210D9B718CC} = {258BC24C-27BF-4081-BA31-B5F4D6C6BAC9}
 		{49ADA897-91E7-476D-8B34-DA6A9E056870} = {258BC24C-27BF-4081-BA31-B5F4D6C6BAC9}
-		{AA7140A8-26DC-4DA1-B49D-0FABC6B1EBCB} = {258BC24C-27BF-4081-BA31-B5F4D6C6BAC9}
+		{E16ED031-14E0-49D1-B959-5F3E67E6E1BA} = {258BC24C-27BF-4081-BA31-B5F4D6C6BAC9}
 	EndGlobalSection
 EndGlobal

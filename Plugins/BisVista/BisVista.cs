@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
 
-namespace Kogler.SerialCOM
+namespace Kogler.SerialCOM.Plugins.BisVista
 {
     [SerialModelDefinition(BisDescription)]
     public class BisVista : SerialModel

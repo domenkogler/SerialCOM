@@ -7,7 +7,7 @@
     <ProjectGuid>{C78CBD55-19E8-4671-A940-4CEEECF607C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kogler.SerialCOM</RootNamespace>
+    <RootNamespace>Kogler.SerialCOM.Plugins.BisVista</RootNamespace>
     <AssemblyName>BisVista</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -45,6 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BisVista.cs" />
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

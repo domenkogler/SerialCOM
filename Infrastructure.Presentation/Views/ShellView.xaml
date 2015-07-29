@@ -4,9 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:presentation="clr-namespace:Kogler.SerialCOM.Infrastructure.Presentation"
-        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
-        Title="{Binding Title}" Height="600" Width="800"
-        d:DataContext="{d:DesignInstance presentation:DesignShellViewModel}">
+        d:DataContext="{d:DesignInstance presentation:DesignShellViewModel}"
+        Title="{Binding Title}" Height="600" Width="800">
 
     <Window.InputBindings>
         <KeyBinding Command="{Binding AboutCommand}" Key="F1"/>
@@ -20,7 +19,7 @@
                     <Setter Property="Command" Value="{Binding Command}" />
                     <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
                     <Setter Property="ItemsSource" Value="{Binding Items}"/>
-                    
+
                     <!--<Setter Property="Icon">
                         <Setter.Value>
                             <Image Source="{Binding MenuIcon}" Height="16px" Width="16px" />
@@ -29,7 +28,7 @@
                 </Style>
             </Menu.ItemContainerStyle>
         </Menu>
-        <xcad:DockingManager AnchorablesSource="{Binding DocumentsService.Anchorables}"
+        <!--<xcad:DockingManager AnchorablesSource="{Binding DocumentsService.Anchorables}"
                              DocumentsSource="{Binding DocumentsService.Documents}"
                              ActiveContent="{Binding DocumentsService.ActiveContent, Mode=TwoWay}">
             <xcad:DockingManager.LayoutItemTemplate>
@@ -54,6 +53,6 @@
                     <xcad:LayoutDocumentPane />
                 </xcad:LayoutPanel>
             </xcad:LayoutRoot>
-        </xcad:DockingManager>
+        </xcad:DockingManager>-->
     </DockPanel>
 </Window>

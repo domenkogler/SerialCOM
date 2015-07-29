@@ -5,18 +5,19 @@ using Kogler.SerialCOM.Infrastructure.Applications;
 namespace Kogler.SerialCOM.Infrastructure.Presentation
 {
     /// <summary>
-    /// Interaction logic for ShellView.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
     [Export(typeof(IShellView))]
-    public partial class ShellView : IShellView
+    public partial class ShellView : Window, IShellView
     {
         public ShellView()
         {
             InitializeComponent();
         }
 
-        public double VirtualScreenWidth { get { return SystemParameters.VirtualScreenWidth; } }
-        public double VirtualScreenHeight { get { return SystemParameters.VirtualScreenHeight; } }
+        public double VirtualScreenWidth => SystemParameters.VirtualScreenWidth;
+        public double VirtualScreenHeight => SystemParameters.VirtualScreenHeight;
+
         public bool IsMaximized
         {
             get { return WindowState == WindowState.Maximized; }
@@ -34,3 +35,4 @@ namespace Kogler.SerialCOM.Infrastructure.Presentation
         }
     }
 }
+
