@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
+using Kogler.SerialCOM.Infrastructure.Shared;
 
 namespace Kogler.SerialCOM.Plugins.BisVista
 {

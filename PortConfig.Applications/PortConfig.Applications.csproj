@@ -4,15 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{95C70119-2692-4F28-B5F5-E210D9B718CC}</ProjectGuid>
+    <ProjectGuid>{85289A44-709C-44CA-A1C8-C948CB48E117}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kogler.SerialCOM.Infrastructure.Shared</RootNamespace>
-    <AssemblyName>Infrastructure.Shared</AssemblyName>
+    <RootNamespace>Kogler.SerialCOM.PortConfig.Applications</RootNamespace>
+    <AssemblyName>PortConfig.Applications</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,50 +24,36 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Build\MEF\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Kogler.Framework">
-      <HintPath>..\Kogler.Framework.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <None Include="ViewModels\AnchorableViewModel.cs" />
-    <None Include="ViewModels\DocumentViewModel.cs" />
-    <Compile Include="FixedSizedObservableQueue.cs" />
-    <Compile Include="ObservableQueue.cs" />
-    <Compile Include="SerialModel.cs" />
-    <Compile Include="Services\IShellService.cs" />
-    <None Include="ViewModels\PaneViewModel.cs" />
-    <Compile Include="Services\PresentationService.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerialPortSession.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Page Include="Resources\Dictionary.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <ProjectReference Include="..\Infrastructure.Shared\Infrastructure.Shared.csproj">
+      <Project>{95c70119-2692-4f28-b5f5-e210d9b718cc}</Project>
+      <Name>Infrastructure.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

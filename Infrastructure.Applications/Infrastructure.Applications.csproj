@@ -48,7 +48,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="DocumentsService.cs" />
+    <Compile Include="TabsService.cs" />
+    <None Include="DocumentsService.cs" />
     <Compile Include="IShellView.cs" />
     <Compile Include="ModuleController.cs" />
     <Compile Include="ShellViewModel.cs" />

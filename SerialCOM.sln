@@ -23,6 +23,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Applications
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Presentation", "Infrastructure.Presentation\Infrastructure.Presentation.csproj", "{E16ED031-14E0-49D1-B959-5F3E67E6E1BA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PortConfig", "PortConfig", "{690EC964-A77D-42DD-A92D-A783AF7B0EE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortConfig.Applications", "PortConfig.Applications\PortConfig.Applications.csproj", "{85289A44-709C-44CA-A1C8-C948CB48E117}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortConfig.Presentation", "PortConfig.Presentation\PortConfig.Presentation.csproj", "{77A75EB7-51BE-4438-97D6-092E3FEB8D65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +55,14 @@ Global
 		{E16ED031-14E0-49D1-B959-5F3E67E6E1BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E16ED031-14E0-49D1-B959-5F3E67E6E1BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E16ED031-14E0-49D1-B959-5F3E67E6E1BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85289A44-709C-44CA-A1C8-C948CB48E117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85289A44-709C-44CA-A1C8-C948CB48E117}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85289A44-709C-44CA-A1C8-C948CB48E117}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85289A44-709C-44CA-A1C8-C948CB48E117}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77A75EB7-51BE-4438-97D6-092E3FEB8D65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A75EB7-51BE-4438-97D6-092E3FEB8D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77A75EB7-51BE-4438-97D6-092E3FEB8D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77A75EB7-51BE-4438-97D6-092E3FEB8D65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +72,7 @@ Global
 		{95C70119-2692-4F28-B5F5-E210D9B718CC} = {258BC24C-27BF-4081-BA31-B5F4D6C6BAC9}
 		{49ADA897-91E7-476D-8B34-DA6A9E056870} = {258BC24C-27BF-4081-BA31-B5F4D6C6BAC9}
 		{E16ED031-14E0-49D1-B959-5F3E67E6E1BA} = {258BC24C-27BF-4081-BA31-B5F4D6C6BAC9}
+		{85289A44-709C-44CA-A1C8-C948CB48E117} = {690EC964-A77D-42DD-A92D-A783AF7B0EE4}
+		{77A75EB7-51BE-4438-97D6-092E3FEB8D65} = {690EC964-A77D-42DD-A92D-A783AF7B0EE4}
 	EndGlobalSection
 EndGlobal

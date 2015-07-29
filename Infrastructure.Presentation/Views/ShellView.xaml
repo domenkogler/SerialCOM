@@ -28,31 +28,12 @@
                 </Style>
             </Menu.ItemContainerStyle>
         </Menu>
-        <!--<xcad:DockingManager AnchorablesSource="{Binding DocumentsService.Anchorables}"
-                             DocumentsSource="{Binding DocumentsService.Documents}"
-                             ActiveContent="{Binding DocumentsService.ActiveContent, Mode=TwoWay}">
-            <xcad:DockingManager.LayoutItemTemplate>
+        <TabControl ItemsSource="{Binding TabsService.Tabs}">
+            <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <ContentPresenter Content="{Binding View}" />
+                    <ContentPresenter Content="{Binding View}"></ContentPresenter>
                 </DataTemplate>
-            </xcad:DockingManager.LayoutItemTemplate>
-            <xcad:DockingManager.LayoutItemContainerStyle>
-                <Style TargetType="{x:Type xcad:LayoutAnchorableItem}">
-                    <Setter Property="Title" Value="{Binding Title}"/>
-                    <Setter Property="IconSource" Value="{Binding IconSource}"/>
-                    <Setter Property="Visibility" Value="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource VisibilityConverter}}"/>
-                    <Setter Property="ContentId" Value="{Binding ContentId}"/>
-                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                    <Setter Property="IsActive" Value="{Binding IsActive, Mode=TwoWay}"/>
-                    <Setter Property="CloseCommand" Value="{Binding CloseCommand}"/>
-                </Style>
-            </xcad:DockingManager.LayoutItemContainerStyle>
-            <xcad:LayoutRoot>
-                <xcad:LayoutPanel Orientation="Horizontal">
-                    <xcad:LayoutAnchorablePane DockWidth="120" />
-                    <xcad:LayoutDocumentPane />
-                </xcad:LayoutPanel>
-            </xcad:LayoutRoot>
-        </xcad:DockingManager>-->
+            </TabControl.ItemTemplate>
+        </TabControl>
     </DockPanel>
 </Window>

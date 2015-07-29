@@ -19,7 +19,7 @@ namespace Kogler.SerialCOM.Infrastructure.Presentation
         public string Title { get; } = ApplicationInfo.ProductName;
         public ICommand AboutCommand { get; }
         public IShellService ShellService { get; } = new MockShellService();
-        public IDocumentsService DocumentsService { get; } = new MockDocumentService();
+        public ITabsService TabsService { get; } = new MockTabsService();
         public void Show() { }
 
         private class MockShellService : IShellService
@@ -30,11 +30,10 @@ namespace Kogler.SerialCOM.Infrastructure.Presentation
             public MenuItemsCollection MenuItems { get; } = new MenuItemsCollection();
         }
 
-        private class MockDocumentService : IDocumentsService
+        private class MockTabsService : ITabsService
         {
-            public ObservableCollection<PaneViewModel> Documents { get; } = new ObservableCollection<PaneViewModel>();
-            public ObservableCollection<PaneViewModel> Anchorables { get; } = new ObservableCollection<PaneViewModel>();
-            public PaneViewModel ActiveContent { get; set; }
+            public ObservableCollection<ViewModel> Tabs { get; } = new ObservableCollection<ViewModel>();
+            public ViewModel Active { get; set; }
         }
     }
 }

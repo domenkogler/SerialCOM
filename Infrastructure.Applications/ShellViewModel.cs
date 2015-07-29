@@ -9,7 +9,7 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
     {
         ICommand AboutCommand { get; }
         IShellService ShellService { get; }
-        IDocumentsService DocumentsService { get; }
+        ITabsService TabsService { get; }
         void Show();
         string Title { get; }
     }
@@ -18,11 +18,11 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
     internal class ShellViewModel : ViewModel<IShellView>, IShellViewModel
     {
         [ImportingConstructor]
-        public ShellViewModel(IShellView view, IMessageService messageService, IShellService shellService, IDocumentsService documentsService) : base(view)
+        public ShellViewModel(IShellView view, IMessageService messageService, IShellService shellService, ITabsService tabsService) : base(view)
         {
             this.messageService = messageService;
             ShellService = shellService;
-            DocumentsService = documentsService;
+            TabsService = tabsService;
 
             view.Closed += ViewClosed;
 
@@ -47,7 +47,7 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
 
         public string Title => ApplicationInfo.ProductName;
         public IShellService ShellService { get; }
-        public IDocumentsService DocumentsService { get; }
+        public ITabsService TabsService { get; }
 
         public void Show()
         {
