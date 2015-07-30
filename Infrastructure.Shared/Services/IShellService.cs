@@ -14,13 +14,12 @@ namespace Kogler.SerialCOM.Infrastructure.Shared
         IView ShellView { get; }
 
         /// <summary>
-        /// Gets or sets the content view which is shown by the shell.
+        /// Gets or sets the views which is shown by the shell.
         /// </summary>
         IView ContentView { get; set; }
-
-        /// <summary>
-        /// Menu Items
-        /// </summary>
-        MenuItemsCollection MenuItems { get; }
+        IView TopView { get; set; }
+        IView LeftView { get; set; }
+        IView BottomView { get; set; }
+        IView RightView { get; set; }
     }
 }

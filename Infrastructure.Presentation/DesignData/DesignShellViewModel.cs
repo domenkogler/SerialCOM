@@ -10,9 +10,9 @@ namespace Kogler.SerialCOM.Infrastructure.Presentation
     {
         public DesignShellViewModel()
         {
-            ShellService.MenuItems.AddToHierarchy(
-                new MenuItem {GroupName = "Menu1", Text = "Command1"},
-                new MenuItem {GroupName = "Menu2", Text = "Command 2"});
+            //ShellService.MenuItems.AddToHierarchy(
+            //    new MenuItem {GroupName = "Menu1", Text = "Command1"},
+            //    new MenuItem {GroupName = "Menu2", Text = "Command 2"});
         }
 
         public IView View { get; }
@@ -27,7 +27,10 @@ namespace Kogler.SerialCOM.Infrastructure.Presentation
             public event PropertyChangedEventHandler PropertyChanged;
             public IView ShellView { get; }
             public IView ContentView { get; set; }
-            public MenuItemsCollection MenuItems { get; } = new MenuItemsCollection();
+            public IView TopView { get; set; }
+            public IView LeftView { get; set; }
+            public IView BottomView { get; set; }
+            public IView RightView { get; set; }
         }
 
         private class MockTabsService : ITabsService

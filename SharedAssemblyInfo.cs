@@ -9,7 +9,7 @@ using System.Resources;
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyProduct("SerialCOM")]
 
-[assembly: CLSCompliant(true)]
+[assembly: CLSCompliant(false)]
 [assembly: ComVisible(false)]
 
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]

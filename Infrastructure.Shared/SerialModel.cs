@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Kogler.Framework;
 
 namespace Kogler.SerialCOM.Infrastructure.Shared
 {
@@ -23,6 +24,12 @@ namespace Kogler.SerialCOM.Infrastructure.Shared
         string Description { get; }
     }
 
+    public interface ISerialModelViewModel : IViewModel
+    {
+        string Title { get; }
+        IList<Framework.MenuItem> Commands { get; }  
+    }
+
     public abstract class SerialModel : ISerialModelDescription
     {
         protected SerialModel(string separator)
@@ -34,11 +41,19 @@ namespace Kogler.SerialCOM.Infrastructure.Shared
         public System.IO.Ports.SerialPort Port { get; private set; }
         public string Header { get; protected set; }
         public List<string> Entries { get; } = new List<string>();
-        public FixedSizedObservableQueue<string[]> Rows { get; } = new FixedSizedObservableQueue<string[]>(100);
+        public FixedSizedObservableQueue<string[]> Rows { get; } = new FixedSizedObservableQueue<string[]>(250);
         public IEnumerable<GridViewColumn> Columns => Split(Header).Select((h, i) => new GridViewColumn { Header = h, DisplayMemberBinding = new Binding($"[{i}]") });
         public KeyValuePair<string, string>[] Filters { get; protected set; }
         public abstract string Description { get; }
         public string SampleData { get; protected set; }
+        public List<ISerialModelViewModel> ViewModels { get; } = new List<ISerialModelViewModel>();
+
+        private ILogger logger;
+        public ILogger Logger
+        {
+            get { return logger ?? (logger = new Logger()); }
+            protected set { logger = value; }
+        }
 
         public static IEnumerable<string> Split(string data)
         {

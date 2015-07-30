@@ -1,28 +1,27 @@
 using System;
 using System.ComponentModel.Composition;
 using Kogler.Framework;
-using Kogler.SerialCOM.Infrastructure.Shared;
 
 namespace Kogler.SerialCOM.Infrastructure.Applications
 {
     public interface IShellViewModel : IViewModel
     {
         ICommand AboutCommand { get; }
-        IShellService ShellService { get; }
-        ITabsService TabsService { get; }
+        //IShellService ShellService { get; }
+        //ITabsService TabsService { get; }
         void Show();
         string Title { get; }
     }
-
+    
     [Export, Export(typeof(IShellViewModel))]
     internal class ShellViewModel : ViewModel<IShellView>, IShellViewModel
     {
         [ImportingConstructor]
-        public ShellViewModel(IShellView view, IMessageService messageService, IShellService shellService, ITabsService tabsService) : base(view)
+        public ShellViewModel(IShellView view) : base(view)
         {
-            this.messageService = messageService;
-            ShellService = shellService;
-            TabsService = tabsService;
+            //this.messageService = messageService;, IMessageService messageService
+            //ShellService = shellService;
+            //TabsService = tabsService;
 
             view.Closed += ViewClosed;
 
@@ -40,14 +39,14 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
 
             AboutCommand = new Command(ShowAboutMessage);
 
-            ShellService.MenuItems.AddToHierarchy(new MenuItem {GroupName = "Help", Text = "About", Command = AboutCommand});
+            //ShellService.MenuItems.AddToHierarchy(new MenuItem {GroupName = "Help", Text = "About", Command = AboutCommand});
         }
 
         private readonly IMessageService messageService;
 
         public string Title => ApplicationInfo.ProductName;
-        public IShellService ShellService { get; }
-        public ITabsService TabsService { get; }
+        //public IShellService ShellService { get; }
+        //public ITabsService TabsService { get; }
 
         public void Show()
         {

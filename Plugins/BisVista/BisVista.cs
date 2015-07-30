@@ -3,10 +3,22 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
+using Kogler.Framework;
 using Kogler.SerialCOM.Infrastructure.Shared;
 
 namespace Kogler.SerialCOM.Plugins.BisVista
 {
+    public class SerialModelLoggerViewModel : DocumentLoggerViewModel, ISerialModelViewModel
+    {
+        public SerialModelLoggerViewModel(DocumentLogger logger) : base(logger)
+        {
+            Commands = new List<MenuItem>();
+        }
+
+        public string Title => "Raw";
+        public IList<MenuItem> Commands { get; set; } 
+    }
+
     [SerialModelDefinition(BisDescription)]
     public class BisVista : SerialModel
     {
@@ -75,6 +87,9 @@ namespace Kogler.SerialCOM.Plugins.BisVista
                 new KeyValuePair<string, string>($".{Separator}", "."),
                 new KeyValuePair<string, string>($"{Separator}.", ".")
             };
+            var logger = new DocumentLogger();
+            Logger = logger;
+            ViewModels.Add(new SerialModelLoggerViewModel(logger));
         }
 
         protected override bool IsNewData(string data)

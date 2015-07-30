@@ -54,6 +54,12 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ILogger.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="DocumentLoggerViewModel.cs" />
+    <Compile Include="Views\SerialModelLoggerView.xaml.cs">
+      <DependentUpon>SerialModelLoggerView.xaml</DependentUpon>
+    </Compile>
     <None Include="ViewModels\AnchorableViewModel.cs" />
     <None Include="ViewModels\DocumentViewModel.cs" />
     <Compile Include="FixedSizedObservableQueue.cs" />
@@ -67,6 +73,10 @@
   <ItemGroup />
   <ItemGroup>
     <Page Include="Resources\Dictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SerialModelLoggerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

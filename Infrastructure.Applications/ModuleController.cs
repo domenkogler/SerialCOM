@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.Composition;
 using Kogler.Framework;
+using Kogler.SerialCOM.Infrastructure.Shared;
 
 namespace Kogler.SerialCOM.Infrastructure.Applications
 {
@@ -8,12 +9,18 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
     internal class ModuleController : IModuleController
     {
         [ImportingConstructor]
-        public ModuleController(Lazy<IShellViewModel> shellViewModel)
+        public ModuleController(Lazy<IShellViewModel> shellViewModel, IMenuViewModel menuViewModel, ITabsViewModel tabsViewModel, IShellService shellService)
         {
             this.shellViewModel = shellViewModel;
+            this.menuViewModel = menuViewModel;
+            this.tabsViewModel = tabsViewModel;
+            this.shellService = shellService;
         }
 
         private readonly Lazy<IShellViewModel> shellViewModel;
+        private readonly IMenuViewModel menuViewModel;
+        private readonly ITabsViewModel tabsViewModel;
+        private readonly IShellService shellService;
 
         public void Initialize()
         {
@@ -30,6 +37,8 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
         public void Run()
         {
             shellViewModel.Value.Show();
+            shellService.TopView = menuViewModel.View;
+            shellService.ContentView = tabsViewModel.View;
         }
 
         public void Shutdown()

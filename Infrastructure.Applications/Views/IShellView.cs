@@ -14,7 +14,7 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
         bool IsMaximized { get; set; }
 
         event EventHandler Closed;
-
+        
         void Show();
         void Close();
     }

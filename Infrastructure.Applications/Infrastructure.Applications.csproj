@@ -48,12 +48,17 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="TabsService.cs" />
+    <Compile Include="ViewModels\MenuViewModel.cs" />
+    <Compile Include="ViewModels\TabsViewModel.cs" />
+    <Compile Include="Views\IMenuView.cs" />
+    <Compile Include="Views\ITabsView.cs" />
+    <Compile Include="Services\MenuService.cs" />
+    <Compile Include="Services\TabsService.cs" />
     <None Include="DocumentsService.cs" />
-    <Compile Include="IShellView.cs" />
+    <Compile Include="Views\IShellView.cs" />
     <Compile Include="ModuleController.cs" />
-    <Compile Include="ShellViewModel.cs" />
-    <Compile Include="ShellService.cs" />
+    <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="Services\ShellService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

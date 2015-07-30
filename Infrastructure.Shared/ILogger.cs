@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Kogler.SerialCOM.PortConfig.Applications
+namespace Kogler.SerialCOM.Infrastructure.Shared
 {
     public interface ILogger
     {

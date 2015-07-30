@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Ports;
 using System.Text;
 using System.Threading.Tasks;
 using Kogler.SerialCOM.Infrastructure.Shared;
@@ -23,17 +23,8 @@ namespace Kogler.SerialCOM.PortConfig.Applications
             Port.Dispose();
         }
 
-        [Import(typeof(ILogger), RequiredCreationPolicy = CreationPolicy.NonShared)]
-        public ILogger Logger { get; internal set; }
         public SerialModel Model { get; }
-        public System.IO.Ports.SerialPort Port { get; }
-
-        public KeyValuePair<string, object>[] Documents =>
-            new[]
-            {
-                new KeyValuePair<string, object>(Model.Description, Model),
-                new KeyValuePair<string, object>("Log", Logger)
-            };
+        public SerialPort Port { get; }
 
         private void OpenPort()
         {
@@ -43,10 +34,10 @@ namespace Kogler.SerialCOM.PortConfig.Applications
             }
             catch (Exception e)
             {
-                Logger.Write(e.Message);
+                Trace.TraceError(e.Message);
             }
             if (!Port.IsOpen) return;
-            Logger.Write($"{Port.PortName} port is open.");
+            Model.Logger.Write($"{Port.PortName} port is open.");
             ReadDataAsync();
         }
 
@@ -57,11 +48,11 @@ namespace Kogler.SerialCOM.PortConfig.Applications
                 try
                 {
                     Port.Close();
-                    Logger.Write($"{Port.PortName} port is closed.");
+                    Model.Logger.Write($"{Port.PortName} port is closed.");
                 }
                 catch (IOException)
                 {
-                    Logger.Write("Error closing port: SerialPort was not open.");
+                    Model.Logger.Write("Error closing port: SerialPort was not open.");
                     throw;
                 }
                 finally
@@ -90,13 +81,13 @@ namespace Kogler.SerialCOM.PortConfig.Applications
                 }
                 catch (IOException e)
                 {
-                    Logger.Write(e.Message);
+                    Model.Logger.Write(e.Message);
                     return;
                 }
                 if (read <= 2) continue;
                 string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                 var inline = !Model.AddData(data);
-                Logger.Write(data, inline);
+                Model.Logger.Write(data, inline);
 
                 buffer = new byte[10240];
                 bytesRead = 0;

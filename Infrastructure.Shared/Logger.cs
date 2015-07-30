@@ -1,23 +1,31 @@
-using System;
-using System.ComponentModel.Composition;
 using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
-using Kogler.SerialCOM.PortConfig.Applications;
+using Kogler.Framework;
 
-namespace Kogler.SerialCOM.PortConfig.Presentation
+namespace Kogler.SerialCOM.Infrastructure.Shared
 {
-    [Export(typeof(ILogger))]
     public class Logger : ILogger
     {
-        public FlowDocument Document { get; } = new FlowDocument();
         public StringBuilder Log { get; } = new StringBuilder();
 
-        public void Write(string text, bool inline = false)
+        public virtual void Write(string text, bool inline = false)
         {
             if (string.IsNullOrEmpty(text)) return;
-            RunInUI(() =>
+            if (inline) Log.Append(text);
+            else Log.AppendLine(text);
+        }
+    }
+
+    public class DocumentLogger : Logger
+    {
+        public FlowDocument Document { get; } = new FlowDocument();
+
+        public override void Write(string text, bool inline = false)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            base.Write(text, false);
+            Dispatcher.RunInUI(() =>
             {
                 Paragraph p = null;
                 if (inline)
@@ -34,14 +42,7 @@ namespace Kogler.SerialCOM.PortConfig.Presentation
                 var t = new Run(text);
                 p.Loaded += ParagrafToView;
                 p.Inlines.Add(t);
-                Log.AppendLine(text);
             });
-        }
-
-        private static async void RunInUI(Action action)
-        {
-            if (SynchronizationContext.Current != null) action();
-            else await Application.Current.Dispatcher.BeginInvoke(action);
         }
 
         private static void ParagrafToView(object sender, RoutedEventArgs e)
