@@ -11,11 +11,5 @@
         <KeyBinding Command="{Binding AboutCommand}" Key="F1"/>
     </Window.InputBindings>
 
-    <DockPanel x:Name="DockPanel">
-        <ContentPresenter Content="{Binding TopView}" DockPanel.Dock="Left"/>
-        <ContentPresenter Content="{Binding LeftView}" DockPanel.Dock="Left"/>
-        <ContentPresenter Content="{Binding BottomView}" DockPanel.Dock="Bottom"/>
-        <ContentPresenter Content="{Binding RightView}" DockPanel.Dock="Right"/>
-        <ContentPresenter Content="{Binding ContentView}"/>
-    </DockPanel>
+    <DockPanel x:Name="DockPanel" LastChildFill="False" />
 </Window>

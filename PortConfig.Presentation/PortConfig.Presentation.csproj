@@ -64,6 +64,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PortConfigDesignViewModel.cs" />
     <Compile Include="PortConfigView.xaml.cs">
       <DependentUpon>PortConfigView.xaml</DependentUpon>
     </Compile>

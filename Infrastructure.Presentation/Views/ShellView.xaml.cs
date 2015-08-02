@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows;
+using System.Windows.Controls;
 using Kogler.SerialCOM.Infrastructure.Applications;
 
 namespace Kogler.SerialCOM.Infrastructure.Presentation

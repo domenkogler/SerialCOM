@@ -17,11 +17,12 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
     internal class ShellViewModel : ViewModel<IShellView>, IShellViewModel
     {
         [ImportingConstructor]
-        public ShellViewModel(IShellView view) : base(view)
+        public ShellViewModel(IShellView view, IMenuService menuService) : base(view)
         {
             //this.messageService = messageService;, IMessageService messageService
             //ShellService = shellService;
             //TabsService = tabsService;
+            this.menuService = menuService;
 
             view.Closed += ViewClosed;
 
@@ -39,10 +40,11 @@ namespace Kogler.SerialCOM.Infrastructure.Applications
 
             AboutCommand = new Command(ShowAboutMessage);
 
-            //ShellService.MenuItems.AddToHierarchy(new MenuItem {GroupName = "Help", Text = "About", Command = AboutCommand});
+            menuService.MenuItems.AddToHierarchy(new MenuItem {GroupName = "Help", Text = "About", Command = AboutCommand});
         }
 
         private readonly IMessageService messageService;
+        private readonly IMenuService menuService;
 
         public string Title => ApplicationInfo.ProductName;
         //public IShellService ShellService { get; }

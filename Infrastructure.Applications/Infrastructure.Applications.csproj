@@ -58,7 +58,6 @@
     <Compile Include="Views\IShellView.cs" />
     <Compile Include="ModuleController.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="Services\ShellService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
